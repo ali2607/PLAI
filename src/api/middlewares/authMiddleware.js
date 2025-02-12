@@ -1,27 +1,81 @@
+// auth.js
+
 const jwt = require('jsonwebtoken');
 
 /**
- * Middleware d'authentification JWT
+ * Récupère le token depuis l'en-tête Authorization
+ * @param {Object} req - Objet Request d'Express
+ * @returns {String} token JWT
+ * @throws {Error}
  */
-module.exports = (req, res, next) => {
+function extractTokenFromHeader(req) {
   const authHeader = req.headers['authorization'];
-
+  
   if (!authHeader) {
-    return res.status(401).json({ message: "Token d'authentification requis" });
+    throw new Error('NoAuthHeader');
   }
-
+  
   const token = authHeader.split(' ')[1];
-
   if (!token) {
-    return res.status(401).json({ message: 'Token invalide ou manquant' });
+    throw new Error('MissingToken');
   }
+  
+  return token;
+}
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) {
-      return res.status(403).json({ message: 'Token invalide' });
-    }
-
-    req.user = user;  // Injecte l'utilisateur dans la requête pour les prochaines étapes
-    next();           // Passe au middleware ou contrôleur suivant
+/**
+ * Vérifie la validité du token JWT
+ * @param {String} token 
+ * @param {String} secret 
+ * @returns {Promise<Object>} Payload décodé du token
+ */
+function verifyJwtToken(token, secret) {
+  return new Promise((resolve, reject) => {
+    jwt.verify(token, secret, (err, decoded) => {
+      if (err) {
+        return reject(err);
+      }
+      resolve(decoded);
+    });
   });
+}
+
+/**
+ * Middleware d'authentification
+ * @param {Object} req - Objet Request d'Express
+ * @param {Object} res - Objet Response d'Express
+ * @param {Function} next - Fonction de callback pour passer au middleware suivant
+ */
+async function authenticate(req, res, next) {
+  try {
+    // 1. Extraction du token depuis l'en-tête
+    const token = extractTokenFromHeader(req);
+    
+    // 2. Vérification et décodage du token
+    const user = await verifyJwtToken(token, process.env.JWT_SECRET);
+    
+    // 3. Injection de l'utilisateur dans la requête
+    req.user = user;
+    
+    // 4. Passage au middleware ou contrôleur suivant
+    next();
+    
+  } catch (error) {
+    // Gestion d'erreur précise en fonction du contexte
+    if (error.message === 'NoAuthHeader') {
+      return res.status(401).json({ message: "Token d'authentification requis" });
+    }
+    if (error.message === 'MissingToken') {
+      return res.status(401).json({ message: "Token invalide ou manquant" });
+    }
+    // Autres erreurs (erreur de signature, expiration, etc.)
+    return res.status(403).json({ message: 'Token invalide' });
+  }
+}
+
+// On peut également exporter les fonctions utiles pour de futurs usages
+module.exports = {
+  extractTokenFromHeader,
+  verifyJwtToken,
+  authenticate
 };
