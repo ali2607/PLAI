@@ -7,8 +7,15 @@
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
     "lint": "eslint .",
-    "test": "jest"
+    "test": "jest",
+    "db:reset": "prisma migrate reset --force",
+    "db:setup": "prisma generate && prisma migrate dev --name init && prisma db seed"
   },
+  "prisma": {
+    "schema": "./src/infrastructure/prisma/schema.prisma",
+    "seed": "node src/infrastructure/prisma/seed.js"
+  }
+  ,
   "keywords": [],
   "author": "",
   "license": "ISC",
