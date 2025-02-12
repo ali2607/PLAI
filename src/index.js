@@ -12,6 +12,12 @@ app.use(express.json());
 // Documentation OpenAPI
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+// Import des routes dummy
+const dummyRoutes = require('./api/routes/dummyRoutes');
+
+// Montage des routes sous un prefixe (par exemple /api/v1/dummy)
+app.use('/dummy', dummyRoutes);
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Serveur démarré sur le port ${PORT}`);
