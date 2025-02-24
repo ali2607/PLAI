@@ -35,7 +35,9 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": { "$ref": "#/components/schemas/Dummy" }
+                  "items": {
+                    "$ref": "#/components/schemas/Dummy"
+                  }
                 }
               }
             }
@@ -48,7 +50,9 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/Dummy" }
+              "schema": {
+                "$ref": "#/components/schemas/Dummy"
+              }
             }
           }
         },
@@ -57,7 +61,9 @@
             "description": "Élément dummy créé",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/Dummy" }
+                "schema": {
+                  "$ref": "#/components/schemas/Dummy"
+                }
               }
             }
           }
@@ -72,7 +78,9 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "integer" }
+            "schema": {
+              "type": "integer"
+            }
           }
         ],
         "responses": {
@@ -80,7 +88,9 @@
             "description": "Élément dummy trouvé",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/Dummy" }
+                "schema": {
+                  "$ref": "#/components/schemas/Dummy"
+                }
               }
             }
           },
@@ -96,14 +106,18 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "integer" }
+            "schema": {
+              "type": "integer"
+            }
           }
         ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/Dummy" }
+              "schema": {
+                "$ref": "#/components/schemas/Dummy"
+              }
             }
           }
         },
@@ -112,7 +126,9 @@
             "description": "Élément dummy mis à jour",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/Dummy" }
+                "schema": {
+                  "$ref": "#/components/schemas/Dummy"
+                }
               }
             }
           },
@@ -128,7 +144,9 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "integer" }
+            "schema": {
+              "type": "integer"
+            }
           }
         ],
         "responses": {
@@ -137,6 +155,92 @@
           },
           "404": {
             "description": "Élément dummy non trouvé"
+          }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "summary": "Inscription d'un nouvel utilisateur",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserRegister"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Inscription réussie, retourne un token JWT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Inscription réussie"
+                    },
+                    "token": {
+                      "type": "string",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR..."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erreur de validation ou utilisateur déjà existant"
+          },
+          "500": {
+            "description": "Erreur interne du serveur"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Connexion d'un utilisateur existant",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserLogin"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Connexion réussie, retourne un token JWT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Connexion réussie"
+                    },
+                    "token": {
+                      "type": "string",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR..."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Nom d’utilisateur ou mot de passe invalide"
+          },
+          "500": {
+            "description": "Erreur interne du serveur"
           }
         }
       }
@@ -156,6 +260,34 @@
             "example": "Nom de Dummy"
           }
         }
+      },
+      "UserRegister": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "player1"
+          },
+          "password": {
+            "type": "string",
+            "example": "motdepasse123"
+          }
+        },
+        "required": ["username", "password"]
+      },
+      "UserLogin": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "player1"
+          },
+          "password": {
+            "type": "string",
+            "example": "motdepasse123"
+          }
+        },
+        "required": ["username", "password"]
       }
     }
   }
