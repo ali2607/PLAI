@@ -21,6 +21,10 @@ app.use('/auth', authRoutes);
 const userRoutes = require('./api/routes/userRoutes');
 app.use('/user', userRoutes);
 
+// Routes pour les jeux
+const gameRoutes = require('./api/routes/gameRoutes');
+app.use('/game', gameRoutes);
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Serveur démarré sur le port ${PORT}`);

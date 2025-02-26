@@ -170,24 +170,153 @@
           }
         }
       }
+    },
+    
+    "/game": {
+      "get": {
+        "summary": "Récupérer la liste des jeux",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Numéro de page pour la pagination",
+            "schema": { "type": "integer", "default": 1 }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Nombre d'éléments par page",
+            "schema": { "type": "integer", "default": 10 }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Filtrer par nom du jeu",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste des jeux",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Game" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer un nouveau jeu",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/GameInput" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Jeu créé avec succès",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Game" }
+              }
+            }
+          },
+          "400": {
+            "description": "Erreur de validation"
+          }
+        }
+      }
+    },
+    "/game/{id}": {
+      "get": {
+        "summary": "Récupérer un jeu par son identifiant",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Jeu trouvé",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Game" }
+              }
+            }
+          },
+          "404": {
+            "description": "Jeu non trouvé"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour un jeu existant",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/GameInput" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Jeu mis à jour",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Game" }
+              }
+            }
+          },
+          "400": {
+            "description": "Erreur de validation"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Supprimer un jeu",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Jeu supprimé avec succès"
+          },
+          "404": {
+            "description": "Jeu non trouvé"
+          }
+        }
+      }
     }
+    
+    
 
   },
   "components": {
     "schemas": {
-      "Dummy": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "example": 1
-          },
-          "name": {
-            "type": "string",
-            "example": "Nom de Dummy"
-          }
-        }
-      },
       "UserRegister": {
         "type": "object",
         "properties": {
@@ -216,13 +345,24 @@
         },
         "required": ["username", "password"]
       },
-      "securitySchemes": {
-        "bearerAuth": {
-          "type": "http",
-          "scheme": "bearer",
-          "bearerFormat": "JWT"
+      "Game": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "example": 1 },
+          "name": { "type": "string", "example": "Pac-Man" },
+          "description": { "type": "string", "example": "Un classique de l’arcade..." },
+          "createdAt": { "type": "string", "format": "date-time" }
         }
+      },
+      "GameInput": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "example": "Pac-Man" },
+          "description": { "type": "string", "example": "Un classique de l’arcade..." }
+        },
+        "required": ["name", "description"]
+      }    
     }
-    }
+    
   }
 }
