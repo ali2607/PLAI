@@ -13,3 +13,28 @@ exports.createUser = async (userData) => {
     data: userData
   });
 };
+
+exports.getUsernames = async ({ username, offset, limit }) => {
+  const filter = username
+    ? { username: { contains: username, mode: 'insensitive' } }
+    : {};
+  return await prisma.user.findMany({
+    where: filter,
+    select: { username: true },
+    skip: offset,
+    take: limit,
+  });
+};
+
+exports.updatePassword = async (id, newPasswordHash) => {
+  return await prisma.user.update({
+    where: { id },
+    data: { passwordHash: newPasswordHash },
+  });
+};
+
+exports.deleteUser = async (id) => {
+  return await prisma.user.delete({
+    where: { id },
+  });
+};

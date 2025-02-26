@@ -6,18 +6,11 @@ const jwt = require('jsonwebtoken');
  * @returns {String} token JWT
  * @throws {Error}
  */
-function extractTokenFromHeader(req) {
-  const authHeader = req.headers['authorization'];
-  
-  if (!authHeader) {
-    throw new Error('NoAuthHeader');
-  }
-  
-  const token = authHeader.split(' ')[1];
+function extractToken(req) {
+  const token = req.cookies.token; 
   if (!token) {
-    throw new Error('MissingToken');
-  }
-  
+    return res.status(401).json({ message: "Token d'authentification requis" });
+  }  
   return token;
 }
 
@@ -47,7 +40,7 @@ function verifyJwtToken(token, secret) {
 async function authenticate(req, res, next) {
   try {
     // 1. Extraction du token depuis l'en-tête
-    const token = extractTokenFromHeader(req);
+    const token = extractToken(req);
     
     // 2. Vérification et décodage du token
     const user = await verifyJwtToken(token, process.env.JWT_SECRET);
@@ -73,7 +66,7 @@ async function authenticate(req, res, next) {
 
 // On peut également exporter les fonctions utiles pour de futurs usages
 module.exports = {
-  extractTokenFromHeader,
+  extractToken,
   verifyJwtToken,
   authenticate
 };
