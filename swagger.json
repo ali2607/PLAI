@@ -91,6 +91,17 @@
         }
       }
     },
+    "/auth/logout": {
+      "post": {
+        "summary": "Déconnexion de l'utilisateur",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Déconnexion réussie"
+          }
+        }
+      }
+    },
     "/user": {
   "get": {
     "summary": "Récupérer la liste des usernames avec filtrage et pagination",
@@ -211,6 +222,7 @@
       },
       "post": {
         "summary": "Créer un nouveau jeu",
+        "security": [{ "bearerAuth": [] }],
         "requestBody": {
           "required": true,
           "content": {
@@ -261,6 +273,7 @@
       },
       "put": {
         "summary": "Mettre à jour un jeu existant",
+        "security": [{ "bearerAuth": [] }],
         "parameters": [
           {
             "name": "id",
@@ -293,6 +306,7 @@
       },
       "delete": {
         "summary": "Supprimer un jeu",
+        "security": [{ "bearerAuth": [] }],
         "parameters": [
           {
             "name": "id",

@@ -20,3 +20,10 @@ exports.login = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+
+exports.logout = (req, res) => {
+  // Efface le cookie contenant le token
+  res.clearCookie('token', { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+  res.json({ message: 'Déconnexion réussie' });
+};
+

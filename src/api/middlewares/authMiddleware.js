@@ -52,15 +52,8 @@ async function authenticate(req, res, next) {
     next();
     
   } catch (error) {
-    // Gestion d'erreur précise en fonction du contexte
-    if (error.message === 'NoAuthHeader') {
-      return res.status(401).json({ message: "Token d'authentification requis" });
-    }
-    if (error.message === 'MissingToken') {
-      return res.status(401).json({ message: "Token invalide ou manquant" });
-    }
     // Autres erreurs (erreur de signature, expiration, etc.)
-    return res.status(403).json({ message: 'Token invalide' });
+    return res.status(401).json({ message: 'Non Connecté' });
   }
 }
 
