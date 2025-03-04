@@ -28,8 +28,14 @@ const deleteAccount = async (userId) => {
   return await userRepository.deleteUser(userId);
 };
 
+const givePrivilege = async (targetUserId, newRole) => {
+  // Vous pouvez ajouter ici une logique supplémentaire (ex : vérifier si l'utilisateur cible existe)
+  return await userRepository.updateUserRole(targetUserId, newRole);
+};
+
 module.exports = {
   getUsernames,
   updatePassword,
   deleteAccount,
+  givePrivilege
 };

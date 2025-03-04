@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const gameController = require('../controllers/gameController');
-const { authenticate } = require('../middlewares/authMiddleware');
+const { authenticate , authorizeRole } = require('../middlewares/authMiddleware');
 
 
 // Récupérer la liste des jeux avec filtrage et pagination
@@ -11,12 +11,12 @@ router.get('/', gameController.getGames);
 router.get('/:id', gameController.getGameById);
 
 // Créer un nouveau jeu
-router.post('/', authenticate, gameController.createGame);
+router.post('/', authenticate, authorizeRole(["ROOT","ADMIN"]), gameController.createGame);
 
 // Mettre à jour un jeu existant
-router.put('/:id', authenticate, gameController.updateGame);
+router.put('/:id', authenticate, authorizeRole(["ROOT","ADMIN"]), gameController.updateGame);
 
 // Supprimer un jeu
-router.delete('/:id', authenticate, gameController.deleteGame);
+router.delete('/:id', authenticate, authorizeRole(["ROOT","ADMIN"]), gameController.deleteGame);
 
 module.exports = router;

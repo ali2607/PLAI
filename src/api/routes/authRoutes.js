@@ -2,7 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
-const { authenticate } = require('../middlewares/authMiddleware');
+const { authenticate , authorizeRole } = require('../middlewares/authMiddleware');
 
 
 // Route pour l'inscription

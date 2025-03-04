@@ -1,19 +1,31 @@
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
+const bcrypt = require('bcrypt');
 
 async function main() {
   // Insertion de quelques utilisateurs
+  // Création du compte ROOT
+  const saltRounds = 10;
+  const rootUser = await prisma.user.create({
+    data: {
+      username: 'root',
+      passwordHash: await bcrypt.hash("root", saltRounds),
+      role: 'ROOT'
+    }
+  })
+
+  
   const user1 = await prisma.user.create({
     data: {
       username: 'player1',
-      passwordHash: 'hashed_password_1', // Remplacez par un hash sécurisé
+      passwordHash:  await bcrypt.hash("test", saltRounds),
     }
   })
 
   const user2 = await prisma.user.create({
     data: {
       username: 'player2',
-      passwordHash: 'hashed_password_2',
+      passwordHash: await bcrypt.hash("test", saltRounds),
     }
   })
 

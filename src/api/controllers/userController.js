@@ -32,8 +32,25 @@ const deleteAccount = async (req, res) => {
   }
 };
 
+const givePrivilege = async (req, res) => {
+  try {
+    const { targetUserId, newRole } = req.body;
+
+    // Validation : Seuls ADMIN et USER sont acceptables pour une modification
+    if (!['ADMIN', 'USER'].includes(newRole)) {
+      return res.status(400).json({ message: 'Rôle non valide. Les rôles autorisés sont ADMIN ou USER.' });
+    }
+
+    const updatedUser = await userService.givePrivilege(targetUserId, newRole);
+    return res.json({ message: 'Privilège mis à jour avec succès', user: updatedUser });
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+};
+
 module.exports = {
   getUsernames,
   updatePassword,
   deleteAccount,
+  givePrivilege
 };

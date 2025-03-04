@@ -38,3 +38,10 @@ exports.deleteUser = async (id) => {
     where: { id },
   });
 };
+
+exports.updateUserRole = async (id, newRole) => {
+  return await prisma.user.update({
+    where: { id },
+    data: { role: newRole },
+  });
+};
