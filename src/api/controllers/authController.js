@@ -4,8 +4,7 @@ const authService = require('../../application/services/authService');
 exports.register = async (req, res) => {
   try {
     const token = await authService.registerUser(req.body);
-    res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
-    res.status(201).json({ message: 'Inscription réussie' });
+    res.status(201).json({ message: 'Inscription réussie', token });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -14,16 +13,10 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
   try {
     const token = await authService.loginUser(req.body);
-    res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
-    res.json({ message: 'Connexion réussie' });
+    res.json({ message: 'Connexion réussie', token });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 };
 
-exports.logout = (req, res) => {
-  // Efface le cookie contenant le token
-  res.clearCookie('token', { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
-  res.json({ message: 'Déconnexion réussie' });
-};
 

@@ -1,4 +1,4 @@
-const { PrismaClient } = require('@prisma/client')
+const { PrismaClient , Role} = require('@prisma/client')
 const prisma = new PrismaClient()
 const bcrypt = require('bcrypt');
 
@@ -10,7 +10,7 @@ async function main() {
     data: {
       username: 'root',
       passwordHash: await bcrypt.hash("root", saltRounds),
-      role: 'ROOT'
+      role: Role.ROOT
     }
   })
 

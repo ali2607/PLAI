@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const gameController = require('../controllers/gameController');
-const { authenticate, authorizeRole } = require('../middlewares/authMiddleware');
+const { authenticate, authorizeRole, authorizeRoles } = require('../middlewares/authMiddleware');
 
 /**
  * @swagger
@@ -104,7 +104,7 @@ router.get('/:id', gameController.getGameById);
  *       403:
  *         description: Accès refusé.
  */
-router.post('/', authenticate, authorizeRole(["ROOT","ADMIN"]), gameController.createGame);
+router.post('/', authenticate, authorizeRoles(["ROOT","ADMIN"]), gameController.createGame);
 
 /**
  * @swagger
@@ -142,7 +142,7 @@ router.post('/', authenticate, authorizeRole(["ROOT","ADMIN"]), gameController.c
  *       403:
  *         description: Accès refusé.
  */
-router.put('/:id', authenticate, authorizeRole(["ROOT","ADMIN"]), gameController.updateGame);
+router.put('/:id', authenticate, authorizeRoles(["ROOT","ADMIN"]), gameController.updateGame);
 
 /**
  * @swagger
@@ -169,6 +169,6 @@ router.put('/:id', authenticate, authorizeRole(["ROOT","ADMIN"]), gameController
  *       403:
  *         description: Accès refusé.
  */
-router.delete('/:id', authenticate, authorizeRole(["ROOT","ADMIN"]), gameController.deleteGame);
+router.delete('/:id', authenticate, authorizeRoles(["ROOT","ADMIN"]), gameController.deleteGame);
 
 module.exports = router;

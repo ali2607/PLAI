@@ -76,4 +76,9 @@ module.exports = swaggerSpec;
  *         description:
  *           type: string
  *           example: Un classique de l’arcade...
- */
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT 
+*/

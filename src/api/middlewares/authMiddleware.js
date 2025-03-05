@@ -7,10 +7,17 @@ const jwt = require('jsonwebtoken');
  * @throws {Error}
  */
 function extractToken(req) {
-  const token = req.cookies.token; 
+  const authHeader = req.headers['authorization'];
+
+  if (!authHeader) {
+    throw new Error('NoAuthHeader');
+  }
+
+  const token = authHeader.split(' ')[1];
   if (!token) {
-    return res.status(401).json({ message: "Token d'authentification requis" });
-  }  
+    throw new Error('MissingToken');
+  }
+
   return token;
 }
 
@@ -41,10 +48,8 @@ async function authenticate(req, res, next) {
   try {
     // 1. Extraction du token depuis l'en-tête
     const token = extractToken(req);
-    
     // 2. Vérification et décodage du token
     const user = await verifyJwtToken(token, process.env.JWT_SECRET);
-    
     // 3. Injection de l'utilisateur dans la requête
     req.user = user;
     
@@ -52,8 +57,15 @@ async function authenticate(req, res, next) {
     next();
     
   } catch (error) {
+    // Gestion d'erreur précise en fonction du contexte
+    if (error.message === 'NoAuthHeader') {
+      return res.status(401).json({ message: "Token d'authentification requis" });
+    }
+    if (error.message === 'MissingToken') {
+      return res.status(401).json({ message: "Token invalide ou manquant" });
+    }
     // Autres erreurs (erreur de signature, expiration, etc.)
-    return res.status(401).json({ message: 'Non Connecté' });
+    return res.status(403).json({ message: 'Token invalide' });
   }
 }
 
@@ -80,5 +92,6 @@ module.exports = {
   extractToken,
   verifyJwtToken,
   authenticate,
-  authorizeRole
+  authorizeRole,
+  authorizeRoles
 };
