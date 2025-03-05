@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('../swagger.json');
+const swaggerSpec = require('../swagger');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 
@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Documentation OpenAPI
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Import et montage des routes d'authentification
 const authRoutes = require('./api/routes/authRoutes');
