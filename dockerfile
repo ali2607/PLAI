@@ -15,6 +15,3 @@ COPY . .
 
 # Exposer le port utilisé par Express (par exemple 3000)
 EXPOSE 3000
-
-# Commande de démarrage
-CMD ["npm", "start"]
