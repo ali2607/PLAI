@@ -25,7 +25,7 @@ const { authenticate } = require('../middlewares/authMiddleware');
  *             $ref: '#/components/schemas/UserRegister'
  *     responses:
  *       201:
- *         description: Inscription réussie, retourne un token JWT dans un cookie.
+ *         description: Inscription réussie, retourne un token JWT.
  *         content:
  *           application/json:
  *             schema:
@@ -56,7 +56,7 @@ router.post('/register', authController.register);
  *             $ref: '#/components/schemas/UserLogin'
  *     responses:
  *       200:
- *         description: Connexion réussie, retourne un token JWT dans un cookie.
+ *         description: Connexion réussie, retourne un token JWT.
  *         content:
  *           application/json:
  *             schema:

@@ -3,12 +3,10 @@ const app = express();
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('../swagger');
 const dotenv = require('dotenv');
-const cookieParser = require('cookie-parser');
 
 dotenv.config({path: '../.env'});
 
 app.use(express.json());
-app.use(cookieParser());
 
 // Documentation OpenAPI
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
