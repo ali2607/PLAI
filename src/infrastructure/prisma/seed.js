@@ -9,6 +9,7 @@ async function main() {
   const rootUser = await prisma.user.create({
     data: {
       username: 'root',
+      email: 'root@plai.com',
       passwordHash: await bcrypt.hash("root", saltRounds),
       role: Role.ROOT
     }
@@ -18,6 +19,7 @@ async function main() {
   const user1 = await prisma.user.create({
     data: {
       username: 'player1',
+      email: 'player1@plai.com',
       passwordHash:  await bcrypt.hash("test", saltRounds),
     }
   })
@@ -25,6 +27,7 @@ async function main() {
   const user2 = await prisma.user.create({
     data: {
       username: 'player2',
+      email: 'player2@plai.com',
       passwordHash: await bcrypt.hash("test", saltRounds),
     }
   })

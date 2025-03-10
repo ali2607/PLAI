@@ -7,11 +7,13 @@ const userRepository = require('../../infrastructure/repositories/userRepository
 // Schémas de validation
 const registerSchema = Joi.object({
   username: Joi.string().required(),
+  email: Joi.string().email({ tlds: { allow: false } }).required(),
   password: Joi.string().min(6).required()
 });
 
 const loginSchema = Joi.object({
   username: Joi.string().required(),
+  email: Joi.string().email({ tlds: { allow: false } }).required(),
   password: Joi.string().required()
 });
 
