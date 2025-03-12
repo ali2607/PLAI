@@ -109,7 +109,7 @@ router.get('/usernames', userController.getUsernames);
  *       500:
  *         description: Erreur interne du serveur
  */
-router.get('/', authenticate, authorizeRoles(['ADMIN', 'ROOT']), userController.getUsers);
+router.get('/', authenticate, authorizeRole(['ADMIN', 'ROOT']), userController.getUsers);
 
 /**
  * @swagger
