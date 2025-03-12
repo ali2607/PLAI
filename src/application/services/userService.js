@@ -1,20 +1,29 @@
 const userRepository = require('../../infrastructure/repositories/userRepository');
 const bcrypt = require('bcrypt');
-const Joi = require('joi');
+const { updatePasswordSchema } = require('../dto/user.dto');
+
 
 const getUsernames = async ({ page = 1, limit = 10, username }) => {
   const pageInt = parseInt(page);
   const limitInt = parseInt(limit);
   const offset = (pageInt - 1) * limitInt;
-  return await userRepository.getUsernames({ username, offset, limit: limitInt });
+  // Récupérer les usernames depuis le dépôt
+  const users = await userRepository.getUsernames({ username, offset, limit: limitInt });
+
+  // Validation de chaque objet utilisateur avec le schéma de sortie
+  const validatedUsers = users.map(user => {
+    const { error, value } = usernameOutputSchema.validate(user);
+    if (error) {
+      throw new Error('Les données de sortie pour un utilisateur ne respectent pas le schéma : ' + error.details[0].message);
+    }
+    return value;
+  });
+  
+  return validatedUsers;
 };
 
 const updatePassword = async (userId, newPassword) => {
-  // Validation du nouveau mot de passe
-  const schema = Joi.object({
-    newPassword: Joi.string().min(6).required(),
-  });
-  const { error, value } = schema.validate({ newPassword });
+  const { error, value } = updatePasswordSchema.validate({ newPassword });
   if (error) {
     throw new Error(error.details[0].message);
   }

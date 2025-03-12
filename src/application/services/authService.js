@@ -1,25 +1,13 @@
 // src/application/services/authService.js
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const Joi = require('joi');
+const { registerInputSchema, loginInputSchema } = require('../dto/auth.dto');
 const userRepository = require('../../infrastructure/repositories/userRepository');
 
-// Schémas de validation
-const registerSchema = Joi.object({
-  username: Joi.string().required(),
-  email: Joi.string().email({ tlds: { allow: false } }).required(),
-  password: Joi.string().min(6).required()
-});
-
-const loginSchema = Joi.object({
-  username: Joi.string().required(),
-  email: Joi.string().email({ tlds: { allow: false } }).required(),
-  password: Joi.string().required()
-});
 
 exports.registerUser = async (data) => {
   // Validation des données d'inscription
-  const { error, value } = registerSchema.validate(data);
+  const { error, value } = registerInputSchema.validate(data);
   if (error) {
     throw new Error(error.details[0].message);
   }
@@ -53,7 +41,7 @@ exports.registerUser = async (data) => {
 
 exports.loginUser = async (data) => {
   // Validation des données de connexion
-  const { error, value } = loginSchema.validate(data);
+  const { error, value } = loginInputSchema.validate(data);
   if (error) {
     throw new Error(error.details[0].message);
   }
