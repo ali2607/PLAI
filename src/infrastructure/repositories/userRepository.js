@@ -8,6 +8,12 @@ exports.findByUsername = async (username) => {
   });
 };
 
+exports.findById = async (id) => {
+  return await prisma.user.findUnique({
+    where: { id: parseInt(id) }
+  });
+};
+
 exports.createUser = async (userData) => {
   return await prisma.user.create({
     data: userData

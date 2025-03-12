@@ -20,6 +20,7 @@ model User {
   passwordHash String
   role         Role   @default(USER)
   createdAt    DateTime @default(now())
+  scores       Score[]
 }
 
 
@@ -28,6 +29,19 @@ model Game {
   name        String   @unique
   description String
   createdAt   DateTime @default(now())
+  scores       Score[]
+}
+
+model Score {
+  id        Int      @id @default(autoincrement())
+  score     Int
+  userId    Int
+  gameId    Int
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  game      Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, gameId])
 }
 
 enum Role {
