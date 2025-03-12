@@ -4,14 +4,13 @@ const jwt = require('jsonwebtoken');
 const { registerInputSchema, loginInputSchema } = require('../dto/auth.dto');
 const userRepository = require('../../infrastructure/repositories/userRepository');
 
-
 exports.registerUser = async (data) => {
   // Validation des données d'inscription
   const { error, value } = registerInputSchema.validate(data);
   if (error) {
     throw new Error(error.details[0].message);
   }
-  const { username, password } = value;
+  const { username, email, password } = value;
 
   // Vérification de l'existence de l'utilisateur
   const existingUser = await userRepository.findByUsername(username);
@@ -26,6 +25,7 @@ exports.registerUser = async (data) => {
   // Création de l'utilisateur dans la BDD
   const newUser = await userRepository.createUser({
     username,
+    email,
     passwordHash
   });
 
