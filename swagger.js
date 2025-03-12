@@ -76,6 +76,52 @@ module.exports = swaggerSpec;
  *         description:
  *           type: string
  *           example: Un classique de l’arcade...
+ *     Score:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *           example: 1
+ *         score:
+ *           type: integer
+ *           example: 1000
+ *         userId:
+ *           type: integer
+ *           example: 1
+ *         gameId:
+ *           type: integer
+ *           example: 1
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *         user:
+ *           type: object
+ *           properties:
+ *             username:
+ *               type: string
+ *               example: player1
+ *         game:
+ *           type: object
+ *           properties:
+ *             name:
+ *               type: string
+ *               example: Pac-Man
+ *     ScoreInput:
+ *       type: object
+ *       required:
+ *         - userId
+ *         - gameId
+ *         - score
+ *       properties:
+ *         userId:
+ *           type: integer
+ *           example: 1
+ *         gameId:
+ *           type: integer
+ *           example: 1
+ *         score:
+ *           type: integer
+ *           example: 1000
  *   securitySchemes:
  *     bearerAuth:
  *       type: http
