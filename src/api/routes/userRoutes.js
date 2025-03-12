@@ -12,7 +12,7 @@ const { authenticate, authorizeRole } = require('../middlewares/authMiddleware')
 
 /**
  * @swagger
- * /user:
+ * /user/usernames:
  *   get:
  *     summary: Récupérer la liste des usernames avec filtrage et pagination
  *     tags: [User]
@@ -50,7 +50,66 @@ const { authenticate, authorizeRole } = require('../middlewares/authMiddleware')
  *       500:
  *         description: Erreur interne du serveur.
  */
-router.get('/', userController.getUsernames);
+router.get('/usernames', userController.getUsernames);
+
+/**
+ * @swagger
+ * /user:
+ *   get:
+ *     summary: Récupérer la liste des utilisateurs avec filtrage et pagination
+ *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Numéro de page pour la pagination.
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Nombre d'éléments par page.
+ *       - in: query
+ *         name: username
+ *         schema:
+ *           type: string
+ *         description: Filtrer par partie du nom d'utilisateur.
+ *     responses:
+ *       200:
+ *         description: Liste paginée des utilisateurs complets
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 1
+ *                   username:
+ *                     type: string
+ *                     example: player1
+ *                   email:
+ *                     type: string
+ *                     example: player1@example.com
+ *                   role:
+ *                     type: string
+ *                     example: ADMIN
+ *                   createdAt:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2024-01-01T12:00:00Z"
+ *       403:
+ *         description: Accès refusé (réservé aux ADMIN/ROOT)
+ *       500:
+ *         description: Erreur interne du serveur
+ */
+router.get('/', authenticate, authorizeRoles(['ADMIN', 'ROOT']), userController.getUsers);
 
 /**
  * @swagger

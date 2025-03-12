@@ -8,6 +8,14 @@ const updatePasswordSchema = Joi.object({
 const usernameOutputSchema = Joi.object({
     username: Joi.string().required(),
   });
+  
+const usersOutputSchema = Joi.object({
+  id: Joi.number().required(),
+  username: Joi.string().required(),
+  email: Joi.string().email().required(),
+  role: Joi.string().valid('ROOT', 'ADMIN', 'USER').required(),
+  createdAt: Joi.date().required(),
+});
 
 module.exports = {
   updatePasswordSchema,

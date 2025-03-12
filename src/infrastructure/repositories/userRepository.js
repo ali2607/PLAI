@@ -26,6 +26,24 @@ exports.getUsernames = async ({ username, offset, limit }) => {
   });
 };
 
+exports.getUsers = async ({ username, offset, limit }) => {
+  const filter = username
+    ? { username: { contains: username, mode: 'insensitive' } }
+    : {};
+  return await prisma.user.findMany({
+    where: filter,
+    select: {
+      id: true,
+      username: true,
+      email: true,
+      role: true,
+      createdAt: true
+    },
+    skip: offset,
+    take: limit,
+  });
+};
+
 exports.updatePassword = async (id, newPasswordHash) => {
   return await prisma.user.update({
     where: { id },

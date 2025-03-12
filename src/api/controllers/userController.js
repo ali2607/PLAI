@@ -10,6 +10,16 @@ const getUsernames = async (req, res) => {
   }
 };
 
+const getUsers = async (req, res) => {
+  try {
+    const { page, limit, username } = req.query;
+    const users = await userService.getUsers({ page, limit, username });
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 const updatePassword = async (req, res) => {
   try {
     // L'utilisateur authentifié est disponible dans req.user grâce au middleware d'authentification
@@ -50,6 +60,7 @@ const givePrivilege = async (req, res) => {
 
 module.exports = {
   getUsernames,
+  getUsers,
   updatePassword,
   deleteAccount,
   givePrivilege
