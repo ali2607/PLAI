@@ -132,6 +132,73 @@ const deleteScore = async (id) => {
   });
 };
 
+const getUserScores = async (userId, { offset, limit }) => {
+  return await prisma.score.findMany({
+    where: { userId: parseInt(userId) },
+    include: {
+      game: true,
+    },
+    orderBy: {
+      score: 'desc',
+    },
+    skip: offset,
+    take: limit,
+  });
+};
+
+const getGamesByUserId = async (userId, { offset, limit }) => {
+  return await prisma.score.findMany({
+    where: { userId: parseInt(userId) },
+    include: {
+      game: true,
+    },
+    distinct: ['gameId'],
+    orderBy: {
+      createdAt: 'desc',
+    },
+    skip: offset,
+    take: limit,
+  });
+};
+
+const getScoresByGameId = async (gameId, { offset, limit }) => {
+  return await prisma.score.findMany({
+    where: { gameId: parseInt(gameId) },
+    include: {
+      user: {
+        select: {
+          id: true,
+          username: true,
+        },
+      },
+    },
+    orderBy: {
+      score: 'desc',
+    },
+    skip: offset,
+    take: limit,
+  });
+};
+
+const getUsersByGameId = async (gameId, { offset, limit }) => {
+  return await prisma.score.findMany({
+    where: { gameId: parseInt(gameId) },
+    include: {
+      user: {
+        select: {
+          id: true,
+          username: true,
+        },
+      },
+    },
+    orderBy: {
+      score: 'desc',
+    },
+    skip: offset,
+    take: limit,
+  });
+};
+
 module.exports = {
   createScore,
   getScores,
@@ -140,4 +207,8 @@ module.exports = {
   updateScore,
   upsertScore,
   deleteScore,
+  getUserScores,
+  getUsersByGameId,
+  getGamesByUserId,
+  getScoresByGameId
 };

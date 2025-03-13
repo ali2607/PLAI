@@ -1,7 +1,7 @@
 const userRepository = require('../../infrastructure/repositories/userRepository');
+const scoreRepository = require('../../infrastructure/repositories/scoreRepository');
 const bcrypt = require('bcrypt');
-const { updatePasswordSchema, usernameOutputSchema, usersOutputSchema } = require('../dto/user.dto');
-
+const { updatePasswordSchema, usernameOutputSchema, usersOutputSchema,userScoreOutputSchema, userGameOutputSchema } = require('../dto/user.dto');
 
   const getUsernames = async ({ page = 1, limit, username }) => {
     let users;
@@ -81,10 +81,80 @@ const givePrivilege = async (targetUserId, newRole) => {
   return await userRepository.updateUserRole(targetUserId, newRole);
 };
 
+/**
+ * Récupère les scores d'un utilisateur pour tous les jeux auxquels il a joué
+ */
+const getUserScores = async (userId, { page = 1, limit = 10 }) => {
+  // Vérifier si l'utilisateur existe
+  const user = await userRepository.findById(userId);
+  if (!user) {
+    throw new Error('Utilisateur non trouvé');
+  }
+
+  const offset = (page - 1) * limit;
+  
+  // Récupérer les scores de l'utilisateur avec les noms de jeux
+  const scores = await scoreRepository.getUserScores(userId, { offset, limit });
+  
+  // Transformer et valider les données avec le DTO
+  const validatedScores = scores.map(score => {
+    const scoreData = {
+      gameId: score.gameId,
+      gameName: score.game.name,
+      score: score.score,
+      createdAt: score.createdAt
+    };
+    
+    const { error, value } = userScoreOutputSchema.validate(scoreData);
+    if (error) {
+      throw new Error('Les données de sortie pour un score ne respectent pas le schéma : ' + error.details[0].message);
+    }
+    return value;
+  });
+  
+  return validatedScores;
+};
+
+/**
+ * Récupère les jeux auxquels un utilisateur a joué
+ */
+const getUserGames = async (userId, { page = 1, limit = 10 }) => {
+  // Vérifier si l'utilisateur existe
+  const user = await userRepository.findById(userId);
+  if (!user) {
+    throw new Error('Utilisateur non trouvé');
+  }
+
+  const offset = (page - 1) * limit;  
+
+  // Récupérer les jeux joués par l'utilisateur
+  const games = await scoreRepository.getGamesByUserId(userId, { offset, limit });
+  
+  // Transformer et valider les données avec le DTO
+  const validatedGames = games.map(item => {
+    const gameData = {
+      gameId: item.game.id,
+      name: item.game.name,
+      description: item.game.description,
+      playedAt: item.createdAt
+    };
+    
+    const { error, value } = userGameOutputSchema.validate(gameData);
+    if (error) {
+      throw new Error('Les données de sortie pour un jeu ne respectent pas le schéma : ' + error.details[0].message);
+    }
+    return value;
+  });
+  
+  return validatedGames;
+};
+
 module.exports = {
   getUsernames,
   getUsers,
   updatePassword,
   deleteAccount,
-  givePrivilege
+  givePrivilege,
+  getUserScores,
+  getUserGames
 };

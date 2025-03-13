@@ -1,5 +1,6 @@
-const { gameInputSchema, gameOutputSchema } = require('../dto/game.dto');
+const { gameInputSchema, gameOutputSchema, gameScoreOutputSchema, gameUserOutputSchema } = require('../dto/game.dto');
 const gameRepository = require('../../infrastructure/repositories/gameRepository');
+const scoreRepository = require('../../infrastructure/repositories/scoreRepository');
 
 const createGame = async (data) => {
   const { error, value } = gameInputSchema.validate(data);
@@ -82,10 +83,80 @@ const deleteGame = async (id) => {
   return await gameRepository.deleteGame(id);
 };
 
+/**
+ * Récupère les scores de tous les utilisateurs pour un jeu spécifique
+ */
+const getGameScores = async (gameId, { page = 1, limit = 10 }) => {
+  // Vérifier si le jeu existe
+  const game = await gameRepository.getGameById(gameId);
+  if (!game) {
+    throw new Error('Jeu non trouvé');
+  }
+
+  const offset = (page - 1) * limit;
+  
+  // Récupérer les scores pour ce jeu
+  const scores = await scoreRepository.getScoresByGameId(gameId, { offset, limit });
+  
+  // Transformer et valider les données avec le DTO
+  const validatedScores = scores.map(score => {
+    const scoreData = {
+      userId: score.userId,
+      username: score.user.username,
+      score: score.score,
+      createdAt: score.createdAt
+    };
+    
+    const { error, value } = gameScoreOutputSchema.validate(scoreData);
+    if (error) {
+      throw new Error('Les données de sortie pour un score ne respectent pas le schéma : ' + error.details[0].message);
+    }
+    return value;
+  });
+  
+  return validatedScores;
+};
+
+/**
+ * Récupère les utilisateurs ayant joué à un jeu spécifique
+ */
+const getGameUsers = async (gameId, { page = 1, limit = 10 }) => {
+  // Vérifier si le jeu existe
+  const game = await gameRepository.getGameById(gameId);
+  if (!game) {
+    throw new Error('Jeu non trouvé');
+  }
+
+  const offset = (page - 1) * limit;
+  
+  // Récupérer les utilisateurs ayant joué à ce jeu
+  const users = await scoreRepository.getUsersByGameId(gameId, { offset, limit });
+  
+  // Transformer et valider les données avec le DTO
+  const validatedUsers = users.map(item => {
+    const userData = {
+      userId: item.user.id,
+      username: item.user.username,
+      score: item.score,
+      playedAt: item.createdAt
+    };
+    
+    const { error, value } = gameUserOutputSchema.validate(userData);
+    if (error) {
+      throw new Error('Les données de sortie pour un utilisateur ne respectent pas le schéma : ' + error.details[0].message);
+    }
+    return value;
+  });
+  
+  return validatedUsers;
+};
+
 module.exports = {
   createGame,
   getGames,
   getGameById,
   updateGame,
   deleteGame,
+  getGameUsers,
+  getGameScores
 };

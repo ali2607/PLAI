@@ -171,4 +171,109 @@ router.put('/:id', authenticate, authorizeRoles(["ROOT","ADMIN"]), gameControlle
  */
 router.delete('/:id', authenticate, authorizeRoles(["ROOT","ADMIN"]), gameController.deleteGame);
 
+/**
+ * @swagger
+ * /game/{id}/scores:
+ *   get:
+ *     summary: Récupère les scores de tous les utilisateurs pour un jeu spécifique
+ *     tags: [Game]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID du jeu
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Numéro de page pour la pagination
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Nombre d'éléments par page
+ *     responses:
+ *       200:
+ *         description: Liste des scores pour ce jeu par utilisateur
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   userId:
+ *                     type: integer
+ *                     example: 1
+ *                   username:
+ *                     type: string
+ *                     example: "player1"
+ *                   score:
+ *                     type: integer
+ *                     example: 1000
+ *                   createdAt:
+ *                     type: string
+ *                     format: date-time
+ *       500:
+ *         description: Erreur serveur
+ */
+router.get('/:id/scores', gameController.getGameScores);
+
+/**
+ * @swagger
+ * /game/{id}/users:
+ *   get:
+ *     summary: Récupère les utilisateurs qui ont joué à un jeu spécifique
+ *     tags: [Game]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID du jeu
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Numéro de page pour la pagination
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Nombre d'éléments par page
+ *     responses:
+ *       200:
+ *         description: Liste des utilisateurs ayant joué à ce jeu
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   userId:
+ *                     type: integer
+ *                     example: 1
+ *                   username:
+ *                     type: string
+ *                     example: "player1"
+ *                   score:
+ *                     type: integer
+ *                     example: 1000
+ *                   playedAt:
+ *                     type: string
+ *                     format: date-time
+ *       500:
+ *         description: Erreur serveur
+ */
+router.get('/:id/users', gameController.getGameUsers);
+
+
 module.exports = router;

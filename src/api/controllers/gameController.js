@@ -50,10 +50,47 @@ const deleteGame = async (req, res) => {
   }
 };
 
+// Récupère les scores de tous les utilisateurs pour un jeu spécifique
+const getGameScores = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { page = 1, limit = 10 } = req.query;
+    
+    const scores = await gameService.getGameScores(
+      parseInt(id), 
+      { page: parseInt(page), limit: parseInt(limit) }
+    );
+    
+    res.json(scores);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Récupère les utilisateurs ayant joué à un jeu spécifique
+const getGameUsers = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { page = 1, limit = 10 } = req.query;
+    
+    const users = await gameService.getGameUsers(
+      parseInt(id), 
+      { page: parseInt(page), limit: parseInt(limit) }
+    );
+    
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
 module.exports = {
   createGame,
   getGames,
   getGameById,
   updateGame,
   deleteGame,
+  getGameScores,
+  getGameUsers
 };

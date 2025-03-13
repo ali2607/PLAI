@@ -58,10 +58,47 @@ const givePrivilege = async (req, res) => {
   }
 };
 
+// Récupère les scores d'un utilisateur pour tous les jeux auxquels il a joué
+const getUserScores = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { page = 1, limit = 10 } = req.query;
+    
+    const scores = await userService.getUserScores(
+      parseInt(id), 
+      { page: parseInt(page), limit: parseInt(limit) }
+    );
+    
+    res.json(scores);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Récupère les jeux auxquels un utilisateur a joué
+const getUserGames = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { page = 1, limit = 10 } = req.query;
+    
+    const games = await userService.getUserGames(
+      parseInt(id), 
+      { page: parseInt(page), limit: parseInt(limit) }
+    );
+    
+    res.json(games);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
 module.exports = {
   getUsernames,
   getUsers,
   updatePassword,
   deleteAccount,
-  givePrivilege
+  givePrivilege,
+  getUserGames,
+  getUserScores
 };

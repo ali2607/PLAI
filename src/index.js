@@ -3,10 +3,15 @@ const app = express();
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('../swagger');
 const dotenv = require('dotenv');
+const morgan = require('morgan');
+const helmet = require('helmet')
+
 
 dotenv.config({path: '../.env'});
 
 app.use(express.json());
+app.use(morgan("dev"));
+app.use(helmet());
 
 // Documentation OpenAPI
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
