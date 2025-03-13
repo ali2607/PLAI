@@ -19,5 +19,6 @@ const usersOutputSchema = Joi.object({
 
 module.exports = {
   updatePasswordSchema,
-  usernameOutputSchema
+  usernameOutputSchema,
+  usersOutputSchema
 };

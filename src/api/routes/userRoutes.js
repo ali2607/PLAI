@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
-const { authenticate, authorizeRole } = require('../middlewares/authMiddleware');
+const { authenticate, authorizeRole, authorizeRoles } = require('../middlewares/authMiddleware');
 
 /**
  * @swagger
@@ -109,7 +109,7 @@ router.get('/usernames', userController.getUsernames);
  *       500:
  *         description: Erreur interne du serveur
  */
-router.get('/', authenticate, authorizeRole(['ADMIN', 'ROOT']), userController.getUsers);
+router.get('/', authenticate, authorizeRoles(['ADMIN', 'ROOT']), userController.getUsers);
 
 /**
  * @swagger

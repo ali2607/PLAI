@@ -33,13 +33,20 @@ const createScore = async (data) => {
   return validatedOutput;
 };
 
-const getScores = async ({ page = 1, limit = 10, userId, gameId }) => {
-  const pageInt = parseInt(page);
-  const limitInt = parseInt(limit);
-  const offset = (pageInt - 1) * limitInt;
-  
-  // Récupérer les scores depuis le dépôt
-  const scores = await scoreRepository.getScores({ userId, gameId, offset, limit: limitInt });
+const getScores = async ({ page = 1, limit, userId, gameId }) => {
+  let scores;
+
+  if (limit !== undefined) {
+    const pageInt = parseInt(page);
+    const limitInt = parseInt(limit);
+    const offset = (pageInt - 1) * limitInt;
+
+    // Récupérer les scores avec pagination
+    scores = await scoreRepository.getScores({ userId, gameId, offset, limit: limitInt });
+  } else {
+    // Aucun limit précisé : récupérer l'intégralité des scores
+    scores = await scoreRepository.getScores({ userId, gameId });
+  }
   
   // Validation de chaque score avec le schéma de sortie
   const validatedScores = scores.map(score => {

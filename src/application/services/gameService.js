@@ -22,23 +22,31 @@ const createGame = async (data) => {
   
   return validatedOutput;};
 
-const getGames = async ({ page = 1, limit = 10, name }) => {
-  const pageInt = parseInt(page);
-  const limitInt = parseInt(limit);
-  const offset = (pageInt - 1) * limitInt;
-    // Récupérer les jeux depuis le dépôt
-    const games = await gameRepository.getGames({ name, offset, limit: limitInt });
+const getGames = async ({ page = 1, limit, name }) => {
+  let games;
+
+  if (limit !== undefined) {
+    const pageInt = parseInt(page);
+    const limitInt = parseInt(limit);
+    const offset = (pageInt - 1) * limitInt;
   
-    // Validation de chaque jeu avec le schéma de sortie
-    const validatedGames = games.map(game => {
-      const { error, value } = gameOutputSchema.validate(game);
-      if (error) {
-        throw new Error('Les données de sortie pour un jeu ne respectent pas le schéma : ' + error.details[0].message);
-      }
-      return value;
-    });
-    
-    return validatedGames;
+    // Récupérer les jeux avec pagination
+    games = await gameRepository.getGames({ name, offset, limit: limitInt });
+  } else {
+    // Aucun limit précisé : récupérer l'intégralité des jeux
+    games = await gameRepository.getGames({ name });
+  }
+  
+  // Validation de chaque jeu avec le schéma de sortie
+  const validatedGames = games.map(game => {
+    const { error, value } = gameOutputSchema.validate(game);
+    if (error) {
+      throw new Error('Les données de sortie pour un jeu ne respectent pas le schéma : ' + error.details[0].message);
+    }
+    return value;
+  });
+  
+  return validatedGames;
 };
 
 const getGameById = async (id) => {
