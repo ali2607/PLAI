@@ -6,16 +6,16 @@ const { authenticate, authorizeRole, authorizeRoles } = require('../middlewares/
 /**
  * @swagger
  * tags:
- *   name: Game
+ *   name: Games
  *   description: Gestion des jeux.
  */
 
 /**
  * @swagger
- * /game:
+ * /games:
  *   get:
  *     summary: Récupérer la liste des jeux avec filtrage et pagination
- *     tags: [Game]
+ *     tags: [Games]
  *     parameters:
  *       - in: query
  *         name: page
@@ -50,10 +50,10 @@ router.get('/', gameController.getGames);
 
 /**
  * @swagger
- * /game/{id}:
+ * /games/{id}:
  *   get:
  *     summary: Récupérer un jeu par son identifiant
- *     tags: [Game]
+ *     tags: [Games]
  *     parameters:
  *       - in: path
  *         name: id
@@ -77,10 +77,10 @@ router.get('/:id', gameController.getGameById);
 
 /**
  * @swagger
- * /game:
+ * /games:
  *   post:
  *     summary: Créer un nouveau jeu
- *     tags: [Game]
+ *     tags: [Games]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -108,10 +108,10 @@ router.post('/', authenticate, authorizeRoles(["ROOT","ADMIN"]), gameController.
 
 /**
  * @swagger
- * /game/{id}:
+ * /games/{id}:
  *   put:
  *     summary: Mettre à jour un jeu existant
- *     tags: [Game]
+ *     tags: [Games]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -146,10 +146,10 @@ router.put('/:id', authenticate, authorizeRoles(["ROOT","ADMIN"]), gameControlle
 
 /**
  * @swagger
- * /game/{id}:
+ * /games/{id}:
  *   delete:
  *     summary: Supprimer un jeu
- *     tags: [Game]
+ *     tags: [Games]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -162,6 +162,14 @@ router.put('/:id', authenticate, authorizeRoles(["ROOT","ADMIN"]), gameControlle
  *     responses:
  *       200:
  *         description: Jeu supprimé avec succès.
+ *         content:
+ *           application/json:
+ *             schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: Jeu supprimé avec succès
  *       404:
  *         description: Jeu non trouvé.
  *       401:
@@ -173,10 +181,10 @@ router.delete('/:id', authenticate, authorizeRoles(["ROOT","ADMIN"]), gameContro
 
 /**
  * @swagger
- * /game/{id}/scores:
+ * /games/{id}/scores:
  *   get:
  *     summary: Récupère les scores de tous les utilisateurs pour un jeu spécifique
- *     tags: [Game]
+ *     tags: [Games]
  *     parameters:
  *       - in: path
  *         name: id
@@ -213,10 +221,10 @@ router.get('/:id/scores', gameController.getGameScores);
 
 /**
  * @swagger
- * /game/{id}/users:
+ * /games/{id}/users:
  *   get:
  *     summary: Récupère les utilisateurs qui ont joué à un jeu spécifique
- *     tags: [Game]
+ *     tags: [Games]
  *     parameters:
  *       - in: path
  *         name: id

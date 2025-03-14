@@ -6,16 +6,16 @@ const { authenticate, authorizeRoles } = require('../middlewares/authMiddleware'
 /**
  * @swagger
  * tags:
- *   name: Score
+ *   name: Scores
  *   description: Gestion des scores de jeu.
  */
 
 /**
  * @swagger
- * /score:
+ * /scores:
  *   get:
  *     summary: Récupérer la liste des scores avec filtrage et pagination
- *     tags: [Score]
+ *     tags: [Scores]
  *     parameters:
  *       - in: query
  *         name: page
@@ -49,10 +49,10 @@ router.get('/', scoreController.getScores);
 
 /**
  * @swagger
- * /score/{id}:
+ * /scores/{id}:
  *   get:
  *     summary: Récupérer un score par son identifiant
- *     tags: [Score]
+ *     tags: [Scores]
  *     parameters:
  *       - in: path
  *         name: id
@@ -72,10 +72,10 @@ router.get('/:id', scoreController.getScoreById);
 
 /**
  * @swagger
- * /score:
+ * /scores:
  *   post:
  *     summary: Créer un nouveau score
- *     tags: [Score]
+ *     tags: [Scores]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -110,10 +110,10 @@ router.post('/', authenticate, authorizeRoles(["ROOT","ADMIN"]), scoreController
 
 /**
  * @swagger
- * /score/{id}:
+ * /scores/{id}:
  *   delete:
  *     summary: Supprimer un score
- *     tags: [Score]
+ *     tags: [Scores]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -137,10 +137,10 @@ router.delete('/:id', authenticate, authorizeRoles(["ROOT","ADMIN"]), scoreContr
 
 /**
  * @swagger
- * /user/{userId}/game/{gameId}/score:
+ * /scores/users/{userId}/games/{gameId}:
  *   get:
  *     summary: Récupérer les scores d'un utilisateur pour un jeu spécifique
- *     tags: [Score]
+ *     tags: [Scores]
  *     parameters:
  *       - in: path
  *         name: userId
@@ -162,14 +162,14 @@ router.delete('/:id', authenticate, authorizeRoles(["ROOT","ADMIN"]), scoreContr
  *       500:
  *         description: Erreur interne du serveur.
  */
-router.get('/user/:userId/game/:gameId', scoreController.getUserGameScores);
+router.get('/users/:userId/games/:gameId', scoreController.getUserGameScores);
 
 /**
  * @swagger
- * /user/{userId}/game/{gameId}/score:
+ * /scores/users/{userId}/games/{gameId}:
  *   put:
  *     summary: Mettre à jour le score d'un utilisateur pour un jeu spécifique
- *     tags: [Score]
+ *     tags: [Scores]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -205,6 +205,6 @@ router.get('/user/:userId/game/:gameId', scoreController.getUserGameScores);
  *       401:
  *         description: Non authentifié.
  */
-router.put('/user/:userId/game/:gameId', authenticate, scoreController.updateUserGameScore);
+router.put('/users/:userId/games/:gameId', authenticate, scoreController.updateUserGameScore);
 
 module.exports = router;

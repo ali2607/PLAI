@@ -6,16 +6,16 @@ const { authenticate, authorizeRole, authorizeRoles } = require('../middlewares/
 /**
  * @swagger
  * tags:
- *   name: User
+ *   name: Users
  *   description: Gestion des utilisateurs.
  */
 
 /**
  * @swagger
- * /user/usernames:
+ * /users/usernames:
  *   get:
  *     summary: Récupérer la liste des usernames avec filtrage et pagination
- *     tags: [User]
+ *     tags: [Users]
  *     parameters:
  *       - in: query
  *         name: page
@@ -54,10 +54,10 @@ router.get('/usernames', userController.getUsernames);
 
 /**
  * @swagger
- * /user:
+ * /users:
  *   get:
  *     summary: Récupérer la liste des utilisateurs avec filtrage et pagination
- *     tags: [User]
+ *     tags: [Users]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -113,10 +113,10 @@ router.get('/', authenticate, authorizeRoles(['ADMIN', 'ROOT']), userController.
 
 /**
  * @swagger
- * /user/password:
+ * /users/password:
  *   put:
  *     summary: Modifier le mot de passe de l'utilisateur connecté
- *     tags: [User]
+ *     tags: [Users]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -145,10 +145,10 @@ router.put('/password', authenticate, userController.updatePassword);
 
 /**
  * @swagger
- * /user/delete:
+ * /users:
  *   delete:
  *     summary: Supprimer le compte de l'utilisateur connecté
- *     tags: [User]
+ *     tags: [Users]
  *     security:
  *       - bearerAuth: []
  *     responses:
@@ -159,14 +159,14 @@ router.put('/password', authenticate, userController.updatePassword);
  *       500:
  *         description: Erreur interne du serveur.
  */
-router.delete('/delete', authenticate, userController.deleteAccount);
+router.delete('/', authenticate, userController.deleteAccount);
 
 /**
  * @swagger
- * /user/givePrivilege:
+ * /users/givePrivilege:
  *   put:
  *     summary: Modifier le rôle d'un utilisateur (accès réservé au ROOT)
- *     tags: [User]
+ *     tags: [Users]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -222,10 +222,10 @@ router.put('/givePrivilege', authenticate, authorizeRole('ROOT'), userController
 
 /**
  * @swagger
- * /user/{id}/scores:
+ * /users/{id}/scores:
  *   get:
  *     summary: Récupère les scores d'un utilisateur pour tous les jeux auxquels il a joué
- *     tags: [User]
+ *     tags: [Users]
  *     parameters:
  *       - in: path
  *         name: id
@@ -262,10 +262,10 @@ router.get('/:id/scores', userController.getUserScores);
 
 /**
  * @swagger
- * /user/{id}/games:
+ * /users/{id}/games:
  *   get:
  *     summary: Récupère les jeux auxquels un utilisateur a joué
- *     tags: [User]
+ *     tags: [Users]
  *     parameters:
  *       - in: path
  *         name: id

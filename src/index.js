@@ -22,15 +22,15 @@ app.use('/auth', authRoutes);
 
 // Import des routes utilisateur
 const userRoutes = require('./api/routes/userRoutes');
-app.use('/user', userRoutes);
+app.use('/users', userRoutes);
 
 // Routes pour les jeux
 const gameRoutes = require('./api/routes/gameRoutes');
-app.use('/game', gameRoutes);
+app.use('/games', gameRoutes);
 
 // Routes pour les scores
 const scoreRoutes = require('./api/routes/scoreRoutes');
-app.use('/score', scoreRoutes);
+app.use('/scores', scoreRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

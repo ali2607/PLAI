@@ -34,6 +34,9 @@ const { authenticate } = require('../middlewares/authMiddleware');
  *                 message:
  *                   type: string
  *                   example: Inscription réussie
+ *                 token:
+ *                   type: string
+ *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
  *       400:
  *         description: Erreur de validation ou utilisateur déjà existant.
  *       500:
@@ -65,6 +68,9 @@ router.post('/register', authController.register);
  *                 message:
  *                   type: string
  *                   example: Connexion réussie
+ *                 token:
+ *                   type: string
+ *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
  *       400:
  *         description: Nom d'utilisateur ou mot de passe invalide.
  *       500:

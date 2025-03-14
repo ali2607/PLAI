@@ -29,11 +29,15 @@ module.exports = swaggerSpec;
  *       type: object
  *       required:
  *         - username
+ *         - email
  *         - password
  *       properties:
  *         username:
  *           type: string
  *           example: player1
+ *         email:
+ *           type: string
+ *           example: email@email.com
  *         password:
  *           type: string
  *           example: motdepasse123
