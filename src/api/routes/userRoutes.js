@@ -233,18 +233,6 @@ router.put('/givePrivilege', authenticate, authorizeRole('ROOT'), userController
  *         schema:
  *           type: integer
  *         description: ID de l'utilisateur
- *       - in: query
- *         name: page
- *         schema:
- *           type: integer
- *           default: 1
- *         description: Numéro de page pour la pagination
- *       - in: query
- *         name: limit
- *         schema:
- *           type: integer
- *           default: 10
- *         description: Nombre d'éléments par page
  *     responses:
  *       200:
  *         description: Liste des scores de l'utilisateur par jeu
@@ -285,18 +273,6 @@ router.get('/:id/scores', userController.getUserScores);
  *         schema:
  *           type: integer
  *         description: ID de l'utilisateur
- *       - in: query
- *         name: page
- *         schema:
- *           type: integer
- *           default: 1
- *         description: Numéro de page pour la pagination
- *       - in: query
- *         name: limit
- *         schema:
- *           type: integer
- *           default: 10
- *         description: Nombre d'éléments par page
  *     responses:
  *       200:
  *         description: Liste des jeux auxquels l'utilisateur a joué

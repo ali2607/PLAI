@@ -86,17 +86,14 @@ const deleteGame = async (id) => {
 /**
  * Récupère les scores de tous les utilisateurs pour un jeu spécifique
  */
-const getGameScores = async (gameId, { page = 1, limit = 10 }) => {
+const getGameScores = async (gameId) => {
   // Vérifier si le jeu existe
   const game = await gameRepository.getGameById(gameId);
   if (!game) {
     throw new Error('Jeu non trouvé');
-  }
-
-  const offset = (page - 1) * limit;
-  
+  }  
   // Récupérer les scores pour ce jeu
-  const scores = await scoreRepository.getScoresByGameId(gameId, { offset, limit });
+  const scores = await scoreRepository.getScoresByGameId(gameId);
   
   // Transformer et valider les données avec le DTO
   const validatedScores = scores.map(score => {
@@ -120,17 +117,15 @@ const getGameScores = async (gameId, { page = 1, limit = 10 }) => {
 /**
  * Récupère les utilisateurs ayant joué à un jeu spécifique
  */
-const getGameUsers = async (gameId, { page = 1, limit = 10 }) => {
+const getGameUsers = async (gameId) => {
   // Vérifier si le jeu existe
   const game = await gameRepository.getGameById(gameId);
   if (!game) {
     throw new Error('Jeu non trouvé');
   }
-
-  const offset = (page - 1) * limit;
   
   // Récupérer les utilisateurs ayant joué à ce jeu
-  const users = await scoreRepository.getUsersByGameId(gameId, { offset, limit });
+  const users = await scoreRepository.getUsersByGameId(gameId);
   
   // Transformer et valider les données avec le DTO
   const validatedUsers = users.map(item => {

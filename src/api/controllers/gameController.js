@@ -54,12 +54,9 @@ const deleteGame = async (req, res) => {
 const getGameScores = async (req, res) => {
   try {
     const { id } = req.params;
-    const { page = 1, limit = 10 } = req.query;
     
-    const scores = await gameService.getGameScores(
-      parseInt(id), 
-      { page: parseInt(page), limit: parseInt(limit) }
-    );
+    // Appel sans pagination
+    const scores = await gameService.getGameScores(parseInt(id));
     
     res.json(scores);
   } catch (error) {
@@ -71,12 +68,9 @@ const getGameScores = async (req, res) => {
 const getGameUsers = async (req, res) => {
   try {
     const { id } = req.params;
-    const { page = 1, limit = 10 } = req.query;
     
-    const users = await gameService.getGameUsers(
-      parseInt(id), 
-      { page: parseInt(page), limit: parseInt(limit) }
-    );
+    // Appel sans pagination
+    const users = await gameService.getGameUsers(parseInt(id));
     
     res.json(users);
   } catch (error) {

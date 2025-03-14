@@ -84,17 +84,15 @@ const givePrivilege = async (targetUserId, newRole) => {
 /**
  * Récupère les scores d'un utilisateur pour tous les jeux auxquels il a joué
  */
-const getUserScores = async (userId, { page = 1, limit = 10 }) => {
+const getUserScores = async (userId) => {
   // Vérifier si l'utilisateur existe
   const user = await userRepository.findById(userId);
   if (!user) {
     throw new Error('Utilisateur non trouvé');
   }
-
-  const offset = (page - 1) * limit;
   
   // Récupérer les scores de l'utilisateur avec les noms de jeux
-  const scores = await scoreRepository.getUserScores(userId, { offset, limit });
+  const scores = await scoreRepository.getUserScores(userId);
   
   // Transformer et valider les données avec le DTO
   const validatedScores = scores.map(score => {
@@ -118,17 +116,15 @@ const getUserScores = async (userId, { page = 1, limit = 10 }) => {
 /**
  * Récupère les jeux auxquels un utilisateur a joué
  */
-const getUserGames = async (userId, { page = 1, limit = 10 }) => {
+const getUserGames = async (userId) => {
   // Vérifier si l'utilisateur existe
   const user = await userRepository.findById(userId);
   if (!user) {
     throw new Error('Utilisateur non trouvé');
   }
 
-  const offset = (page - 1) * limit;  
-
   // Récupérer les jeux joués par l'utilisateur
-  const games = await scoreRepository.getGamesByUserId(userId, { offset, limit });
+  const games = await scoreRepository.getGamesByUserId(userId);
   
   // Transformer et valider les données avec le DTO
   const validatedGames = games.map(item => {

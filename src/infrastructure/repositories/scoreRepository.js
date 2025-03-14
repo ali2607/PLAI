@@ -132,7 +132,7 @@ const deleteScore = async (id) => {
   });
 };
 
-const getUserScores = async (userId, { offset, limit }) => {
+const getUserScores = async (userId) => {
   return await prisma.score.findMany({
     where: { userId: parseInt(userId) },
     include: {
@@ -140,13 +140,11 @@ const getUserScores = async (userId, { offset, limit }) => {
     },
     orderBy: {
       score: 'desc',
-    },
-    skip: offset,
-    take: limit,
+    }
   });
 };
 
-const getGamesByUserId = async (userId, { offset, limit }) => {
+const getGamesByUserId = async (userId) => {
   return await prisma.score.findMany({
     where: { userId: parseInt(userId) },
     include: {
@@ -155,13 +153,11 @@ const getGamesByUserId = async (userId, { offset, limit }) => {
     distinct: ['gameId'],
     orderBy: {
       createdAt: 'desc',
-    },
-    skip: offset,
-    take: limit,
+    }
   });
 };
 
-const getScoresByGameId = async (gameId, { offset, limit }) => {
+const getScoresByGameId = async (gameId) => {
   return await prisma.score.findMany({
     where: { gameId: parseInt(gameId) },
     include: {
@@ -174,13 +170,11 @@ const getScoresByGameId = async (gameId, { offset, limit }) => {
     },
     orderBy: {
       score: 'desc',
-    },
-    skip: offset,
-    take: limit,
+    }
   });
 };
 
-const getUsersByGameId = async (gameId, { offset, limit }) => {
+const getUsersByGameId = async (gameId) => {
   return await prisma.score.findMany({
     where: { gameId: parseInt(gameId) },
     include: {
@@ -193,9 +187,7 @@ const getUsersByGameId = async (gameId, { offset, limit }) => {
     },
     orderBy: {
       score: 'desc',
-    },
-    skip: offset,
-    take: limit,
+    }
   });
 };
 

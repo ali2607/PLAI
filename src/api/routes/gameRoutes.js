@@ -184,18 +184,6 @@ router.delete('/:id', authenticate, authorizeRoles(["ROOT","ADMIN"]), gameContro
  *         schema:
  *           type: integer
  *         description: ID du jeu
- *       - in: query
- *         name: page
- *         schema:
- *           type: integer
- *           default: 1
- *         description: Numéro de page pour la pagination
- *       - in: query
- *         name: limit
- *         schema:
- *           type: integer
- *           default: 10
- *         description: Nombre d'éléments par page
  *     responses:
  *       200:
  *         description: Liste des scores pour ce jeu par utilisateur
@@ -236,18 +224,6 @@ router.get('/:id/scores', gameController.getGameScores);
  *         schema:
  *           type: integer
  *         description: ID du jeu
- *       - in: query
- *         name: page
- *         schema:
- *           type: integer
- *           default: 1
- *         description: Numéro de page pour la pagination
- *       - in: query
- *         name: limit
- *         schema:
- *           type: integer
- *           default: 10
- *         description: Nombre d'éléments par page
  *     responses:
  *       200:
  *         description: Liste des utilisateurs ayant joué à ce jeu
