@@ -1,9 +1,9 @@
-// This is your updated Prisma seed file.
+// This is the seed script.
 // It creates:
 //  • 1 ROOT user
-//  • 3 ADMIN users with realistic names
-//  • 30 normal users with realistic full names
-//  • 10 games with real game names
+//  • 3 ADMIN users
+//  • 30 normal users
+//  • 10 games
 //  • Scores: one normal user plays all games, one plays none, and the others (plus admins and root) get random scores.
 
 const { PrismaClient, Role } = require('@prisma/client');
@@ -23,7 +23,7 @@ async function main() {
     }
   });
 
-  // Create 3 ADMIN users with realistic names
+  // Create 3 ADMIN users
   const adminData = [
     {
       username: 'Alice Johnson',
@@ -51,7 +51,7 @@ async function main() {
     adminUsers.push(createdAdmin);
   }
 
-  // Create 30 normal users with realistic full names
+  // Create 30 normal users
   const normalUserNames = [
     "David Miller", "Emma Wilson", "Frank Garcia", "Grace Martinez", "Henry Robinson",
     "Isabella Clark", "Jack Lewis", "Karen Lee", "Larry Walker", "Monica Young",
@@ -76,28 +76,25 @@ async function main() {
     normalUsers.push(user);
   }
 
-  // Create 10 games with real game names
+  // Create 10 games
   const gameData = [
-    { name: 'Pac-Man', description: 'Un classique de l’arcade où vous mangez des pastilles en évitant les fantômes.' },
-    { name: 'Tetris', description: 'Un jeu de puzzle avec des blocs qui tombent.' },
-    { name: 'Super Mario Bros', description: 'Un jeu de plateforme emblématique de Nintendo.' },
-    { name: 'The Legend of Zelda', description: "Un jeu d'aventure et d'action avec des énigmes." },
-    { name: 'Street Fighter II', description: 'Un jeu de combat légendaire.' },
-    { name: 'Minecraft', description: 'Un jeu de construction et d’exploration en monde ouvert.' },
-    { name: 'Doom', description: 'Un jeu de tir à la première personne qui a défini le genre.' },
-    { name: 'Half-Life', description: 'Un jeu de tir à la première personne avec une histoire captivante.' },
-    { name: 'Final Fantasy VII', description: 'Un RPG emblématique avec une histoire épique.' },
-    { name: 'Call of Duty', description: 'Un jeu de tir à la première personne populaire pour son mode multijoueur.' }
-  ];
+    { name: 'Pac-Man', description: 'An arcade classic where you eat pellets while avoiding ghosts.' },
+    { name: 'Tetris', description: 'A puzzle game with falling blocks.' },
+    { name: 'Super Mario Bros', description: 'An iconic platformer from Nintendo.' },
+    { name: 'The Legend of Zelda', description: 'An adventure and action game with puzzles.' },
+    { name: 'Street Fighter II', description: 'A legendary fighting game.' },
+    { name: 'Minecraft', description: 'A building and exploration game in an open world.' },
+    { name: 'Doom', description: 'A first-person shooter that defined the genre.' },
+    { name: 'Half-Life', description: 'A first-person shooter with a captivating story.' },
+    { name: 'Final Fantasy VII', description: 'An iconic RPG with an epic story.' },
+    { name: 'Call of Duty', description: 'A popular first-person shooter known for its multiplayer mode.' }
+  ];  
 
   const games = [];
   for (const game of gameData) {
     const createdGame = await prisma.game.create({ data: game });
     games.push(createdGame);
   }
-
-  // Combine all users into a single array for score assignments
-  const allUsers = [rootUser, ...adminUsers, ...normalUsers];
 
   // For scores, we want:
   //  • One normal user (first in normalUsers array: "David Miller") to play all games.
@@ -166,7 +163,7 @@ async function main() {
     }
   }
 
-  console.log('Seed effectué avec succès !');
+  console.log('Seed Completed !');
 }
 
 main()

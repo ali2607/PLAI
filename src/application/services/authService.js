@@ -1,35 +1,34 @@
-// src/application/services/authService.js
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { registerInputSchema, loginInputSchema } = require('../dto/auth.dto');
 const userRepository = require('../../infrastructure/repositories/userRepository');
 
 exports.registerUser = async (data) => {
-  // Validation des données d'inscription
+  // Validation of registration data
   const { error, value } = registerInputSchema.validate(data);
   if (error) {
     throw new Error(error.details[0].message);
   }
   const { username, email, password } = value;
 
-  // Vérification de l'existence de l'utilisateur
+  // Check if the user already exists
   const existingUser = await userRepository.findByUsername(username);
   if (existingUser) {
-    throw new Error('Nom d’utilisateur déjà utilisé');
+    throw new Error('Username already in use');
   }
 
-  // Hachage du mot de passe
+  // Password hashing
   const saltRounds = 10;
   const passwordHash = await bcrypt.hash(password, saltRounds);
 
-  // Création de l'utilisateur dans la BDD
+  // Creating the user in the database
   const newUser = await userRepository.createUser({
     username,
     email,
     passwordHash
   });
 
-  // Génération du token JWT (valable 1h)
+  // JWT token generation (valid for 1h)
   const token = jwt.sign(
     { id: newUser.id, username: newUser.username },
     process.env.JWT_SECRET,
@@ -40,26 +39,26 @@ exports.registerUser = async (data) => {
 };
 
 exports.loginUser = async (data) => {
-  // Validation des données de connexion
+  // Validation of login data
   const { error, value } = loginInputSchema.validate(data);
   if (error) {
     throw new Error(error.details[0].message);
   }
   const { username, password } = value;
 
-  // Récupération de l'utilisateur
+  // Retrieving the user
   const user = await userRepository.findByUsername(username);
   if (!user) {
-    throw new Error('Nom d’utilisateur ou mot de passe invalide');
+    throw new Error('Invalid username or password');
   }
 
-  // Vérification du mot de passe
+  // Password verification
   const isValid = await bcrypt.compare(password, user.passwordHash);
   if (!isValid) {
-    throw new Error('Nom d’utilisateur ou mot de passe invalide');
+    throw new Error('Invalid username or password');
   }
 
-  // Génération du token JWT
+  // JWT token generation
   const token = jwt.sign(
     { id: user.id, username: user.username, role: user.role },
     process.env.JWT_SECRET,

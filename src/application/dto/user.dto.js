@@ -1,6 +1,6 @@
 const Joi = require('joi');
 
-// Schéma pour la mise à jour du mot de passe
+// Schema for updating the password
 const updatePasswordSchema = Joi.object({
   newPassword: Joi.string().min(6).required(),
 });
@@ -17,7 +17,7 @@ const usersOutputSchema = Joi.object({
   createdAt: Joi.date().required(),
 });
 
-// Schéma pour les scores d'un utilisateur
+// Schema for user scores
 const userScoreOutputSchema = Joi.object({
   gameId: Joi.number().integer().required(),
   gameName: Joi.string().required(),
@@ -25,7 +25,7 @@ const userScoreOutputSchema = Joi.object({
   createdAt: Joi.date().required()
 });
 
-// Schéma pour les jeux joués par un utilisateur
+// Schema for games played by a user
 const userGameOutputSchema = Joi.object({
   gameId: Joi.number().integer().required(),
   name: Joi.string().required(),

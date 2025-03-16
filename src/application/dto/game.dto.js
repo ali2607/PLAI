@@ -1,12 +1,12 @@
 const Joi = require('joi');
 
-// Schéma d'entrée pour un jeu
+// Input schema for a game
 const gameInputSchema = Joi.object({
   name: Joi.string().required(),
   description: Joi.string().required(),
 });
 
-// Schéma de sortie pour un jeu
+// Output schema for a game
 const gameOutputSchema = Joi.object({
   id: Joi.number().required(),
   name: Joi.string().required(),
@@ -14,7 +14,7 @@ const gameOutputSchema = Joi.object({
   createdAt: Joi.date().required(),
 });
 
-// Schéma pour les scores d'un jeu (par utilisateur)
+// Schema for game scores (per user)
 const gameScoreOutputSchema = Joi.object({
   userId: Joi.number().integer().required(),
   username: Joi.string().required(),
@@ -22,7 +22,7 @@ const gameScoreOutputSchema = Joi.object({
   createdAt: Joi.date().required()
 });
 
-// Schéma pour les utilisateurs ayant joué à un jeu
+// Schema for users who played a game
 const gameUserOutputSchema = Joi.object({
   userId: Joi.number().integer().required(),
   username: Joi.string().required(),

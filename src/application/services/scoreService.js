@@ -9,25 +9,25 @@ const createScore = async (data) => {
     throw new Error(error.details[0].message);
   }
 
-  // Vérifier si l'utilisateur existe
+  // Check if the user exists
   const user = await userRepository.findById(value.userId);
   if (!user) {
-    throw new Error('Utilisateur non trouvé');
+    throw new Error('User not found');
   }
 
-  // Vérifier si le jeu existe
+  // Check if the game exists
   const game = await gameRepository.getGameById(value.gameId);
   if (!game) {
-    throw new Error('Jeu non trouvé');
+    throw new Error('Game not found');
   }
 
-  // Création du score
+  // Score creation
   const newScore = await scoreRepository.createScore(value);
   
-  // Validation des données de sortie
+  // Output data validation
   const { error: outputError, value: validatedOutput } = scoreOutputSchema.validate(newScore);
   if (outputError) {
-    throw new Error('Les données de sortie ne respectent pas le schéma : ' + outputError.details[0].message);
+    throw new Error('Output data does not conform to the schema: ' + outputError.details[0].message);
   }
   
   return validatedOutput;
@@ -41,18 +41,18 @@ const getScores = async ({ page = 1, limit, userId, gameId }) => {
     const limitInt = parseInt(limit);
     const offset = (pageInt - 1) * limitInt;
 
-    // Récupérer les scores avec pagination
+    // Retrieve scores with pagination
     scores = await scoreRepository.getScores({ userId, gameId, offset, limit: limitInt });
   } else {
-    // Aucun limit précisé : récupérer l'intégralité des scores
+    // No limit specified: retrieve all scores
     scores = await scoreRepository.getScores({ userId, gameId });
   }
   
-  // Validation de chaque score avec le schéma de sortie
+  // Validation of each score with the output schema
   const validatedScores = scores.map(score => {
     const { error, value } = scoreOutputSchema.validate(score);
     if (error) {
-      throw new Error('Les données de sortie pour un score ne respectent pas le schéma : ' + error.details[0].message);
+      throw new Error('Output data for a score does not conform to the schema: ' + error.details[0].message);
     }
     return value;
   });
@@ -64,10 +64,10 @@ const getScoreById = async (id) => {
   const score = await scoreRepository.getScoreById(id);
   if (!score) return null;
   
-  // Validation des données de sortie
+  // Output data validation
   const { error, value } = scoreOutputSchema.validate(score);
   if (error) {
-    throw new Error('Les données de sortie ne respectent pas le schéma : ' + error.details[0].message);
+    throw new Error('Output data does not conform to the schema: ' + error.details[0].message);
   }
   
   return value;
@@ -79,13 +79,13 @@ const updateScore = async (userId, gameId, data) => {
     throw new Error(error.details[0].message);
   }
   
-  // Mise à jour du score (création si n'existe pas)
+  // Updating score (creating if it does not exist)
   const updatedScore = await scoreRepository.upsertScore(userId, gameId, value.score);
   
-  // Validation des données de sortie
+  // Output data validation
   const { error: outputError, value: validatedOutput } = scoreOutputSchema.validate(updatedScore);
   if (outputError) {
-    throw new Error('Les données de sortie ne respectent pas le schéma : ' + outputError.details[0].message);
+    throw new Error('Output data does not conform to the schema: ' + outputError.details[0].message);
   }
   
   return validatedOutput;

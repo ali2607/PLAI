@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
 
 /**
- * Récupère le token depuis l'en-tête Authorization
- * @param {Object} req - Objet Request d'Express
- * @returns {String} token JWT
+ * Extracts the token from the Authorization header
+ * @param {Object} req - Express Request object
+ * @returns {String} JWT token
  * @throws {Error}
  */
 function extractToken(req) {
@@ -22,10 +22,10 @@ function extractToken(req) {
 }
 
 /**
- * Vérifie la validité du token JWT
+ * Verifies the validity of the JWT token
  * @param {String} token 
  * @param {String} secret 
- * @returns {Promise<Object>} Payload décodé du token
+ * @returns {Promise<Object>} Decoded token payload
  */
 function verifyJwtToken(token, secret) {
   return new Promise((resolve, reject) => {
@@ -39,40 +39,40 @@ function verifyJwtToken(token, secret) {
 }
 
 /**
- * Middleware d'authentification
- * @param {Object} req - Objet Request d'Express
- * @param {Object} res - Objet Response d'Express
- * @param {Function} next - Fonction de callback pour passer au middleware suivant
+ * Authentication middleware
+ * @param {Object} req - Express Request object
+ * @param {Object} res - Express Response object
+ * @param {Function} next - Callback function to pass to the next middleware
  */
 async function authenticate(req, res, next) {
   try {
-    // 1. Extraction du token depuis l'en-tête
+    // 1. Extract the token from the header
     const token = extractToken(req);
-    // 2. Vérification et décodage du token
+    // 2. Verify and decode the token
     const user = await verifyJwtToken(token, process.env.JWT_SECRET);
-    // 3. Injection de l'utilisateur dans la requête
+    // 3. Inject the user into the request
     req.user = user;
     
-    // 4. Passage au middleware ou contrôleur suivant
+    // 4. Pass to the next middleware or controller
     next();
     
   } catch (error) {
-    // Gestion d'erreur précise en fonction du contexte
+    // Precise error handling based on the context
     if (error.message === 'NoAuthHeader') {
-      return res.status(401).json({ message: "Token d'authentification requis" });
+      return res.status(401).json({ message: 'Authentication token required' });
     }
     if (error.message === 'MissingToken') {
-      return res.status(401).json({ message: "Token invalide ou manquant" });
+      return res.status(401).json({ message: 'Invalid or missing token' });
     }
-    // Autres erreurs (erreur de signature, expiration, etc.)
-    return res.status(403).json({ message: 'Token invalide' });
+    // Other errors (signature error, expiration, etc.)
+    return res.status(403).json({ message: 'Invalid token' });
   }
 }
 
 function authorizeRole(requiredRole) {
   return (req, res, next) => {
     if (!req.user || req.user.role !== requiredRole) {
-      return res.status(403).json({ message: 'Accès refusé' });
+      return res.status(403).json({ message: 'Access denied' });
     }
     next();
   };
@@ -81,13 +81,12 @@ function authorizeRole(requiredRole) {
 function authorizeRoles(allowedRoles) {
   return (req, res, next) => {
     if (!req.user || !allowedRoles.includes(req.user.role)) {
-      return res.status(403).json({ message: 'Accès refusé' });
+      return res.status(403).json({ message: 'Access denied' });
     }
     next();
   };
 }
 
-// On peut également exporter les fonctions utiles pour de futurs usages
 module.exports = {
   extractToken,
   verifyJwtToken,

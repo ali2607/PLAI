@@ -1,18 +1,18 @@
 const Joi = require('joi');
 
-// Schéma d'entrée pour un score
+// Input schema for a score
 const scoreInputSchema = Joi.object({
   userId: Joi.number().integer().required(),
   gameId: Joi.number().integer().required(),
   score: Joi.number().integer().min(0).required(),
 });
 
-// Schéma d'entrée pour la mise à jour d'un score
+// Input schema for updating a score
 const scoreUpdateSchema = Joi.object({
   score: Joi.number().integer().min(0).required(),
 });
 
-// Schéma de sortie pour un score
+// Output schema for a score
 const scoreOutputSchema = Joi.object({
   id: Joi.number().integer().required(),
   score: Joi.number().integer().required(),

@@ -23,7 +23,7 @@ const getScoreById = async (req, res) => {
   try {
     const { id } = req.params;
     const score = await scoreService.getScoreById(parseInt(id));
-    if (!score) return res.status(404).json({ message: 'Score non trouvé' });
+    if (!score) return res.status(404).json({ message: 'Score not found' });
     res.json(score);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -54,7 +54,7 @@ const deleteScore = async (req, res) => {
   try {
     const { id } = req.params;
     await scoreService.deleteScore(parseInt(id));
-    res.json({ message: 'Score supprimé avec succès' });
+    res.json({ message: 'Score successfully deleted' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

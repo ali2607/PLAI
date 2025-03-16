@@ -7,7 +7,7 @@ services:
       - db
     environment:
       - DATABASE_URL=postgresql://root:root@db:5432/plai
-      - JWT_SECRET=VotreSecretJWT
+      - JWT_SECRET=SecretJWT
     command: sh -c "npm run db:setup && npm start"
   db:
     image: postgres:13

@@ -1,65 +1,65 @@
 const userRepository = require('../../infrastructure/repositories/userRepository');
 const scoreRepository = require('../../infrastructure/repositories/scoreRepository');
 const bcrypt = require('bcrypt');
-const { updatePasswordSchema, usernameOutputSchema, usersOutputSchema,userScoreOutputSchema, userGameOutputSchema } = require('../dto/user.dto');
+const { updatePasswordSchema, usernameOutputSchema, usersOutputSchema, userScoreOutputSchema, userGameOutputSchema } = require('../dto/user.dto');
 
-  const getUsernames = async ({ page = 1, limit, username }) => {
-    let users;
+const getUsernames = async ({ page = 1, limit, username }) => {
+  let users;
 
-    if (limit !== undefined) {
-      const pageInt = parseInt(page);
-      const limitInt = parseInt(limit);
-      const offset = (pageInt - 1) * limitInt;
+  if (limit !== undefined) {
+    const pageInt = parseInt(page);
+    const limitInt = parseInt(limit);
+    const offset = (pageInt - 1) * limitInt;
 
-      // Récupérer les usernames avec pagination
-      users = await userRepository.getUsernames({ username, offset, limit: limitInt });
-    } else {
-      // Aucun limit précisé : récupérer l'intégralité des usernames
-      users = await userRepository.getUsernames({ username });
+    // Retrieve usernames with pagination
+    users = await userRepository.getUsernames({ username, offset, limit: limitInt });
+  } else {
+    // No limit specified: retrieve all usernames
+    users = await userRepository.getUsernames({ username });
+  }
+
+  // Validate each user object with the output schema
+  const validatedUsers = users.map(user => {
+    const { error, value } = usernameOutputSchema.validate(user);
+    if (error) {
+      throw new Error(
+        "Output data for a user does not comply with the schema: " +
+          error.details[0].message
+      );
     }
+    return value;
+  });
 
-    // Validation de chaque objet utilisateur avec le schéma de sortie
-    const validatedUsers = users.map(user => {
-      const { error, value } = usernameOutputSchema.validate(user);
-      if (error) {
-        throw new Error(
-          "Les données de sortie pour un utilisateur ne respectent pas le schéma : " +
-            error.details[0].message
-        );
-      }
-      return value;
-    });
-
-    return validatedUsers;
-  };
+  return validatedUsers;
+};
 
 
-  const getUsers = async ({ page = 1, limit, username }) => {
-    let users;
+const getUsers = async ({ page = 1, limit, username }) => {
+  let users;
 
-    if (limit !== undefined) {
-      const pageInt = parseInt(page);
-      const limitInt = parseInt(limit);
-      const offset = (pageInt - 1) * limitInt;
+  if (limit !== undefined) {
+    const pageInt = parseInt(page);
+    const limitInt = parseInt(limit);
+    const offset = (pageInt - 1) * limitInt;
 
-      // Récupérer les usernames avec pagination
-      users = await userRepository.getUsers({ username, offset, limit: limitInt });
-    } else {
-      // Aucun limit précisé : récupérer l'intégralité des usernames
-      users = await userRepository.getUsers({ username });
+    // Retrieve users with pagination
+    users = await userRepository.getUsers({ username, offset, limit: limitInt });
+  } else {
+    // No limit specified: retrieve all users
+    users = await userRepository.getUsers({ username });
+  }
+
+  // Validate each user object with the output schema
+  const validatedUsers = users.map(user => {
+    const { error, value } = usersOutputSchema.validate(user);
+    if (error) {
+      throw new Error('Output data for a user does not comply with the schema: ' + error.details[0].message);
     }
-
-    // Validation de chaque objet utilisateur avec le schéma de sortie
-    const validatedUsers = users.map(user => {
-      const { error, value } = usersOutputSchema.validate(user);
-      if (error) {
-        throw new Error('Les données de sortie pour un utilisateur ne respectent pas le schéma : ' + error.details[0].message);
-      }
-      return value;
-    });
-    
-    return validatedUsers;
-  };
+    return value;
+  });
+  
+  return validatedUsers;
+};
 
 const updatePassword = async (userId, newPassword) => {
   const { error, value } = updatePasswordSchema.validate({ newPassword });
@@ -67,7 +67,7 @@ const updatePassword = async (userId, newPassword) => {
     throw new Error(error.details[0].message);
   }
 
-  // Hachage du nouveau mot de passe
+  // Hash the new password
   const newPasswordHash = await bcrypt.hash(value.newPassword, 10);
   return await userRepository.updatePassword(userId, newPasswordHash);
 };
@@ -77,24 +77,24 @@ const deleteAccount = async (userId) => {
 };
 
 const givePrivilege = async (targetUserId, newRole) => {
-  // Vous pouvez ajouter ici une logique supplémentaire (ex : vérifier si l'utilisateur cible existe)
+  // You can add additional logic here (e.g., check if the target user exists)
   return await userRepository.updateUserRole(targetUserId, newRole);
 };
 
 /**
- * Récupère les scores d'un utilisateur pour tous les jeux auxquels il a joué
+ * Retrieves the scores of a user for all the games they have played
  */
 const getUserScores = async (userId) => {
-  // Vérifier si l'utilisateur existe
+  // Check if the user exists
   const user = await userRepository.findById(userId);
   if (!user) {
-    throw new Error('Utilisateur non trouvé');
+    throw new Error('User not found');
   }
   
-  // Récupérer les scores de l'utilisateur avec les noms de jeux
+  // Retrieve the user's scores with the game names
   const scores = await scoreRepository.getUserScores(userId);
   
-  // Transformer et valider les données avec le DTO
+  // Transform and validate the data with the DTO
   const validatedScores = scores.map(score => {
     const scoreData = {
       gameId: score.gameId,
@@ -105,7 +105,7 @@ const getUserScores = async (userId) => {
     
     const { error, value } = userScoreOutputSchema.validate(scoreData);
     if (error) {
-      throw new Error('Les données de sortie pour un score ne respectent pas le schéma : ' + error.details[0].message);
+      throw new Error('Output data for a score does not comply with the schema: ' + error.details[0].message);
     }
     return value;
   });
@@ -114,19 +114,19 @@ const getUserScores = async (userId) => {
 };
 
 /**
- * Récupère les jeux auxquels un utilisateur a joué
+ * Retrieves the games a user has played
  */
 const getUserGames = async (userId) => {
-  // Vérifier si l'utilisateur existe
+  // Check if the user exists
   const user = await userRepository.findById(userId);
   if (!user) {
-    throw new Error('Utilisateur non trouvé');
+    throw new Error('User not found');
   }
 
-  // Récupérer les jeux joués par l'utilisateur
+  // Retrieve the games played by the user
   const games = await scoreRepository.getGamesByUserId(userId);
   
-  // Transformer et valider les données avec le DTO
+  // Transform and validate the data with the DTO
   const validatedGames = games.map(item => {
     const gameData = {
       gameId: item.game.id,
@@ -137,7 +137,7 @@ const getUserGames = async (userId) => {
     
     const { error, value } = userGameOutputSchema.validate(gameData);
     if (error) {
-      throw new Error('Les données de sortie pour un jeu ne respectent pas le schéma : ' + error.details[0].message);
+      throw new Error('Output data for a game does not comply with the schema: ' + error.details[0].message);
     }
     return value;
   });

@@ -23,7 +23,7 @@ const getGameById = async (req, res) => {
   try {
     const { id } = req.params;
     const game = await gameService.getGameById(parseInt(id));
-    if (!game) return res.status(404).json({ message: 'Jeu non trouvé' });
+    if (!game) return res.status(404).json({ message: 'Game not found' });
     res.json(game);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -44,18 +44,17 @@ const deleteGame = async (req, res) => {
   try {
     const { id } = req.params;
     await gameService.deleteGame(parseInt(id));
-    res.json({ message: 'Jeu supprimé avec succès' });
+    res.json({ message: 'Game successfully deleted' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-// Récupère les scores de tous les utilisateurs pour un jeu spécifique
+// Get scores of all users for a specific game
 const getGameScores = async (req, res) => {
   try {
     const { id } = req.params;
     
-    // Appel sans pagination
     const scores = await gameService.getGameScores(parseInt(id));
     
     res.json(scores);
@@ -64,12 +63,11 @@ const getGameScores = async (req, res) => {
   }
 };
 
-// Récupère les utilisateurs ayant joué à un jeu spécifique
+// Get users who played a specific game
 const getGameUsers = async (req, res) => {
   try {
     const { id } = req.params;
     
-    // Appel sans pagination
     const users = await gameService.getGameUsers(parseInt(id));
     
     res.json(users);
@@ -77,7 +75,6 @@ const getGameUsers = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
 
 module.exports = {
   createGame,

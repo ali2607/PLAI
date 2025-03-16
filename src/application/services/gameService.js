@@ -7,21 +7,22 @@ const createGame = async (data) => {
   if (error) {
     throw new Error(error.details[0].message);
   }
-  // Vérifier l'unicité du nom
+  // Verify name uniqueness
   const existingGame = await gameRepository.findByName(value.name);
   if (existingGame) {
-    throw new Error('Un jeu avec ce nom existe déjà');
+    throw new Error('A game with this name already exists');
   }
-  // Création du jeu
+  // Create game
   const newGame = await gameRepository.createGame(value);
   
-  // Validation des données de sortie
+  // Validate output data
   const { error: outputError, value: validatedOutput } = gameOutputSchema.validate(newGame);
   if (outputError) {
-    throw new Error('Les données de sortie ne respectent pas le schéma : ' + outputError.details[0].message);
+    throw new Error('Output data does not match the schema: ' + outputError.details[0].message);
   }
   
-  return validatedOutput;};
+  return validatedOutput;
+};
 
 const getGames = async ({ page = 1, limit, name }) => {
   let games;
@@ -31,18 +32,18 @@ const getGames = async ({ page = 1, limit, name }) => {
     const limitInt = parseInt(limit);
     const offset = (pageInt - 1) * limitInt;
   
-    // Récupérer les jeux avec pagination
+    // Retrieve games with pagination
     games = await gameRepository.getGames({ name, offset, limit: limitInt });
   } else {
-    // Aucun limit précisé : récupérer l'intégralité des jeux
+    // No limit specified: retrieve all games
     games = await gameRepository.getGames({ name });
   }
   
-  // Validation de chaque jeu avec le schéma de sortie
+  // Validate each game with the output schema
   const validatedGames = games.map(game => {
     const { error, value } = gameOutputSchema.validate(game);
     if (error) {
-      throw new Error('Les données de sortie pour un jeu ne respectent pas le schéma : ' + error.details[0].message);
+      throw new Error('Output data for a game does not match the schema: ' + error.details[0].message);
     }
     return value;
   });
@@ -54,10 +55,10 @@ const getGameById = async (id) => {
   const game = await gameRepository.getGameById(id);
   if (!game) return null;
   
-  // Validation des données de sortie
+  // Validate output data
   const { error, value } = gameOutputSchema.validate(game);
   if (error) {
-    throw new Error('Les données de sortie ne respectent pas le schéma : ' + error.details[0].message);
+    throw new Error('Output data does not match the schema: ' + error.details[0].message);
   }
   
   return value;
@@ -70,10 +71,10 @@ const updateGame = async (id, data) => {
   }
   const updatedGame = await gameRepository.updateGame(id, value);
   
-  // Validation des données de sortie
+  // Validate output data
   const { error: outputError, value: validatedOutput } = gameOutputSchema.validate(updatedGame);
   if (outputError) {
-    throw new Error('Les données de sortie ne respectent pas le schéma : ' + outputError.details[0].message);
+    throw new Error('Output data does not match the schema: ' + outputError.details[0].message);
   }
   
   return validatedOutput;
@@ -84,18 +85,18 @@ const deleteGame = async (id) => {
 };
 
 /**
- * Récupère les scores de tous les utilisateurs pour un jeu spécifique
+ * Retrieves the scores of all users for a specific game
  */
 const getGameScores = async (gameId) => {
-  // Vérifier si le jeu existe
+  // Verify if the game exists
   const game = await gameRepository.getGameById(gameId);
   if (!game) {
-    throw new Error('Jeu non trouvé');
+    throw new Error('Game not found');
   }  
-  // Récupérer les scores pour ce jeu
+  // Retrieve scores for this game
   const scores = await scoreRepository.getScoresByGameId(gameId);
   
-  // Transformer et valider les données avec le DTO
+  // Transform and validate data using the DTO
   const validatedScores = scores.map(score => {
     const scoreData = {
       userId: score.userId,
@@ -106,7 +107,7 @@ const getGameScores = async (gameId) => {
     
     const { error, value } = gameScoreOutputSchema.validate(scoreData);
     if (error) {
-      throw new Error('Les données de sortie pour un score ne respectent pas le schéma : ' + error.details[0].message);
+      throw new Error('Output data for a score does not match the schema: ' + error.details[0].message);
     }
     return value;
   });
@@ -115,19 +116,19 @@ const getGameScores = async (gameId) => {
 };
 
 /**
- * Récupère les utilisateurs ayant joué à un jeu spécifique
+ * Retrieves users who played a specific game
  */
 const getGameUsers = async (gameId) => {
-  // Vérifier si le jeu existe
+  // Verify if the game exists
   const game = await gameRepository.getGameById(gameId);
   if (!game) {
-    throw new Error('Jeu non trouvé');
+    throw new Error('Game not found');
   }
   
-  // Récupérer les utilisateurs ayant joué à ce jeu
+  // Retrieve users who played this game
   const users = await scoreRepository.getUsersByGameId(gameId);
   
-  // Transformer et valider les données avec le DTO
+  // Transform and validate data using the DTO
   const validatedUsers = users.map(item => {
     const userData = {
       userId: item.user.id,
@@ -138,7 +139,7 @@ const getGameUsers = async (gameId) => {
     
     const { error, value } = gameUserOutputSchema.validate(userData);
     if (error) {
-      throw new Error('Les données de sortie pour un utilisateur ne respectent pas le schéma : ' + error.details[0].message);
+      throw new Error('Output data for a user does not match the schema: ' + error.details[0].message);
     }
     return value;
   });
