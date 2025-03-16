@@ -7,14 +7,14 @@ const { authenticate, authorizeRoles } = require('../middlewares/authMiddleware'
  * @swagger
  * tags:
  *   name: Scores
- *   description: Gestion des scores de jeu.
+ *   description: Management of game scores.
  */
 
 /**
  * @swagger
  * /scores:
  *   get:
- *     summary: Récupérer la liste des scores avec filtrage et pagination
+ *     summary: Retrieve a list of scores with filtering and pagination
  *     tags: [Scores]
  *     parameters:
  *       - in: query
@@ -22,28 +22,28 @@ const { authenticate, authorizeRoles } = require('../middlewares/authMiddleware'
  *         schema:
  *           type: integer
  *           default: 1
- *         description: Numéro de page pour la pagination.
+ *         description: Page number for pagination.
  *       - in: query
  *         name: limit
  *         schema:
  *           type: integer
  *           default: 10
- *         description: Nombre d'éléments par page.
+ *         description: Number of items per page.
  *       - in: query
  *         name: userId
  *         schema:
  *           type: integer
- *         description: Filtrer par ID utilisateur.
+ *         description: Filter by user ID.
  *       - in: query
  *         name: gameId
  *         schema:
  *           type: integer
- *         description: Filtrer par ID jeu.
+ *         description: Filter by game ID.
  *     responses:
  *       200:
- *         description: Liste des scores.
+ *         description: List of scores.
  *       500:
- *         description: Erreur interne du serveur.
+ *         description: Internal server error.
  */
 router.get('/', scoreController.getScores);
 
@@ -51,7 +51,7 @@ router.get('/', scoreController.getScores);
  * @swagger
  * /scores/{id}:
  *   get:
- *     summary: Récupérer un score par son identifiant
+ *     summary: Retrieve a score by its ID
  *     tags: [Scores]
  *     parameters:
  *       - in: path
@@ -59,14 +59,14 @@ router.get('/', scoreController.getScores);
  *         required: true
  *         schema:
  *           type: integer
- *         description: Identifiant du score.
+ *         description: Score identifier.
  *     responses:
  *       200:
- *         description: Score trouvé.
+ *         description: Score found.
  *       404:
- *         description: Score non trouvé.
+ *         description: Score not found.
  *       500:
- *         description: Erreur interne du serveur.
+ *         description: Internal server error.
  */
 router.get('/:id', scoreController.getScoreById);
 
@@ -74,7 +74,7 @@ router.get('/:id', scoreController.getScoreById);
  * @swagger
  * /scores:
  *   post:
- *     summary: Créer un nouveau score
+ *     summary: Create a new score
  *     tags: [Scores]
  *     security:
  *       - bearerAuth: []
@@ -100,11 +100,11 @@ router.get('/:id', scoreController.getScoreById);
  *                 example: 1000
  *     responses:
  *       201:
- *         description: Score créé avec succès.
+ *         description: Score created successfully.
  *       400:
- *         description: Erreur de validation.
+ *         description: Validation error.
  *       401:
- *         description: Non authentifié.
+ *         description: Not authenticated.
  */
 router.post('/', authenticate, authorizeRoles(["ROOT","ADMIN"]), scoreController.createScore);
 
@@ -112,7 +112,7 @@ router.post('/', authenticate, authorizeRoles(["ROOT","ADMIN"]), scoreController
  * @swagger
  * /scores/{id}:
  *   delete:
- *     summary: Supprimer un score
+ *     summary: Delete a score
  *     tags: [Scores]
  *     security:
  *       - bearerAuth: []
@@ -122,16 +122,16 @@ router.post('/', authenticate, authorizeRoles(["ROOT","ADMIN"]), scoreController
  *         required: true
  *         schema:
  *           type: integer
- *         description: Identifiant du score à supprimer.
+ *         description: Score identifier to delete.
  *     responses:
  *       200:
- *         description: Score supprimé avec succès.
+ *         description: Score successfully deleted.
  *       404:
- *         description: Score non trouvé.
+ *         description: Score not found.
  *       401:
- *         description: Non authentifié.
+ *         description: Not authenticated.
  *       403:
- *         description: Accès refusé.
+ *         description: Access denied.
  */
 router.delete('/:id', authenticate, authorizeRoles(["ROOT","ADMIN"]), scoreController.deleteScore);
 
@@ -139,7 +139,7 @@ router.delete('/:id', authenticate, authorizeRoles(["ROOT","ADMIN"]), scoreContr
  * @swagger
  * /scores/users/{userId}/games/{gameId}:
  *   get:
- *     summary: Récupérer les scores d'un utilisateur pour un jeu spécifique
+ *     summary: Retrieve scores of a user for a specific game
  *     tags: [Scores]
  *     parameters:
  *       - in: path
@@ -147,20 +147,20 @@ router.delete('/:id', authenticate, authorizeRoles(["ROOT","ADMIN"]), scoreContr
  *         required: true
  *         schema:
  *           type: integer
- *         description: ID de l'utilisateur.
+ *         description: User ID.
  *       - in: path
  *         name: gameId
  *         required: true
  *         schema:
  *           type: integer
- *         description: ID du jeu.
+ *         description: Game ID.
  *     responses:
  *       200:
- *         description: Scores trouvés.
+ *         description: Scores found.
  *       404:
- *         description: Scores non trouvés.
+ *         description: Scores not found.
  *       500:
- *         description: Erreur interne du serveur.
+ *         description: Internal server error.
  */
 router.get('/users/:userId/games/:gameId', scoreController.getUserGameScores);
 
@@ -168,7 +168,7 @@ router.get('/users/:userId/games/:gameId', scoreController.getUserGameScores);
  * @swagger
  * /scores/users/{userId}/games/{gameId}:
  *   put:
- *     summary: Mettre à jour le score d'un utilisateur pour un jeu spécifique
+ *     summary: Update the score of a user for a specific game
  *     tags: [Scores]
  *     security:
  *       - bearerAuth: []
@@ -178,13 +178,13 @@ router.get('/users/:userId/games/:gameId', scoreController.getUserGameScores);
  *         required: true
  *         schema:
  *           type: integer
- *         description: ID de l'utilisateur.
+ *         description: User ID.
  *       - in: path
  *         name: gameId
  *         required: true
  *         schema:
  *           type: integer
- *         description: ID du jeu.
+ *         description: Game ID.
  *     requestBody:
  *       required: true
  *       content:
@@ -199,11 +199,11 @@ router.get('/users/:userId/games/:gameId', scoreController.getUserGameScores);
  *                 example: 1500
  *     responses:
  *       200:
- *         description: Score mis à jour avec succès.
+ *         description: Score updated successfully.
  *       400:
- *         description: Erreur de validation.
+ *         description: Validation error.
  *       401:
- *         description: Non authentifié.
+ *         description: Not authenticated.
  */
 router.put('/users/:userId/games/:gameId', authenticate, scoreController.updateUserGameScore);
 

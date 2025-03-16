@@ -7,14 +7,14 @@ const { authenticate, authorizeRole, authorizeRoles } = require('../middlewares/
  * @swagger
  * tags:
  *   name: Games
- *   description: Gestion des jeux.
+ *   description: Management of games.
  */
 
 /**
  * @swagger
  * /games:
  *   get:
- *     summary: Récupérer la liste des jeux avec filtrage et pagination
+ *     summary: Retrieve a list of games with filtering and pagination
  *     tags: [Games]
  *     parameters:
  *       - in: query
@@ -22,21 +22,21 @@ const { authenticate, authorizeRole, authorizeRoles } = require('../middlewares/
  *         schema:
  *           type: integer
  *           default: 1
- *         description: Numéro de page pour la pagination.
+ *         description: Page number for pagination.
  *       - in: query
  *         name: limit
  *         schema:
  *           type: integer
  *           default: 10
- *         description: Nombre d'éléments par page.
+ *         description: Number of items per page.
  *       - in: query
  *         name: name
  *         schema:
  *           type: string
- *         description: Filtrer par nom du jeu.
+ *         description: Filter by game name.
  *     responses:
  *       200:
- *         description: Liste des jeux.
+ *         description: List of games.
  *         content:
  *           application/json:
  *             schema:
@@ -44,7 +44,7 @@ const { authenticate, authorizeRole, authorizeRoles } = require('../middlewares/
  *               items:
  *                 $ref: '#/components/schemas/Game'
  *       500:
- *         description: Erreur interne du serveur.
+ *         description: Internal server error.
  */
 router.get('/', gameController.getGames);
 
@@ -52,7 +52,7 @@ router.get('/', gameController.getGames);
  * @swagger
  * /games/{id}:
  *   get:
- *     summary: Récupérer un jeu par son identifiant
+ *     summary: Retrieve a game by its ID
  *     tags: [Games]
  *     parameters:
  *       - in: path
@@ -60,18 +60,18 @@ router.get('/', gameController.getGames);
  *         required: true
  *         schema:
  *           type: integer
- *         description: Identifiant du jeu.
+ *         description: Game identifier.
  *     responses:
  *       200:
- *         description: Jeu trouvé.
+ *         description: Game found.
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Game'
  *       404:
- *         description: Jeu non trouvé.
+ *         description: Game not found.
  *       500:
- *         description: Erreur interne du serveur.
+ *         description: Internal server error.
  */
 router.get('/:id', gameController.getGameById);
 
@@ -79,30 +79,30 @@ router.get('/:id', gameController.getGameById);
  * @swagger
  * /games:
  *   post:
- *     summary: Créer un nouveau jeu
+ *     summary: Create a new game
  *     tags: [Games]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
  *       required: true
- *       description: Données du jeu à créer.
+ *       description: Data for the new game.
  *       content:
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/GameInput'
  *     responses:
  *       201:
- *         description: Jeu créé avec succès.
+ *         description: Game created successfully.
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Game'
  *       400:
- *         description: Erreur de validation.
+ *         description: Validation error.
  *       401:
- *         description: Non authentifié.
+ *         description: Not authenticated.
  *       403:
- *         description: Accès refusé.
+ *         description: Access denied.
  */
 router.post('/', authenticate, authorizeRoles(["ROOT","ADMIN"]), gameController.createGame);
 
@@ -110,7 +110,7 @@ router.post('/', authenticate, authorizeRoles(["ROOT","ADMIN"]), gameController.
  * @swagger
  * /games/{id}:
  *   put:
- *     summary: Mettre à jour un jeu existant
+ *     summary: Update an existing game
  *     tags: [Games]
  *     security:
  *       - bearerAuth: []
@@ -120,27 +120,27 @@ router.post('/', authenticate, authorizeRoles(["ROOT","ADMIN"]), gameController.
  *         required: true
  *         schema:
  *           type: integer
- *         description: Identifiant du jeu à mettre à jour.
+ *         description: ID of the game to update.
  *     requestBody:
  *       required: true
- *       description: Données à mettre à jour pour le jeu.
+ *       description: Data to update the game.
  *       content:
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/GameInput'
  *     responses:
  *       200:
- *         description: Jeu mis à jour.
+ *         description: Game updated.
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Game'
  *       400:
- *         description: Erreur de validation.
+ *         description: Validation error.
  *       401:
- *         description: Non authentifié.
+ *         description: Not authenticated.
  *       403:
- *         description: Accès refusé.
+ *         description: Access denied.
  */
 router.put('/:id', authenticate, authorizeRoles(["ROOT","ADMIN"]), gameController.updateGame);
 
@@ -148,7 +148,7 @@ router.put('/:id', authenticate, authorizeRoles(["ROOT","ADMIN"]), gameControlle
  * @swagger
  * /games/{id}:
  *   delete:
- *     summary: Supprimer un jeu
+ *     summary: Delete a game
  *     tags: [Games]
  *     security:
  *       - bearerAuth: []
@@ -158,10 +158,10 @@ router.put('/:id', authenticate, authorizeRoles(["ROOT","ADMIN"]), gameControlle
  *         required: true
  *         schema:
  *           type: integer
- *         description: Identifiant du jeu à supprimer.
+ *         description: ID of the game to delete.
  *     responses:
  *       200:
- *         description: Jeu supprimé avec succès.
+ *         description: Game successfully deleted.
  *         content:
  *           application/json:
  *             schema:
@@ -169,13 +169,13 @@ router.put('/:id', authenticate, authorizeRoles(["ROOT","ADMIN"]), gameControlle
  *              properties:
  *                message:
  *                  type: string
- *                  example: Jeu supprimé avec succès
+ *                  example: Game successfully deleted
  *       404:
- *         description: Jeu non trouvé.
+ *         description: Game not found.
  *       401:
- *         description: Non authentifié.
+ *         description: Not authenticated.
  *       403:
- *         description: Accès refusé.
+ *         description: Access denied.
  */
 router.delete('/:id', authenticate, authorizeRoles(["ROOT","ADMIN"]), gameController.deleteGame);
 
@@ -183,7 +183,7 @@ router.delete('/:id', authenticate, authorizeRoles(["ROOT","ADMIN"]), gameContro
  * @swagger
  * /games/{id}/scores:
  *   get:
- *     summary: Récupère les scores de tous les utilisateurs pour un jeu spécifique
+ *     summary: Retrieve scores of all users for a specific game
  *     tags: [Games]
  *     parameters:
  *       - in: path
@@ -191,10 +191,10 @@ router.delete('/:id', authenticate, authorizeRoles(["ROOT","ADMIN"]), gameContro
  *         required: true
  *         schema:
  *           type: integer
- *         description: ID du jeu
+ *         description: Game ID.
  *     responses:
  *       200:
- *         description: Liste des scores pour ce jeu par utilisateur
+ *         description: List of scores for the game per user.
  *         content:
  *           application/json:
  *             schema:
@@ -215,7 +215,7 @@ router.delete('/:id', authenticate, authorizeRoles(["ROOT","ADMIN"]), gameContro
  *                     type: string
  *                     format: date-time
  *       500:
- *         description: Erreur serveur
+ *         description: Server error.
  */
 router.get('/:id/scores', gameController.getGameScores);
 
@@ -223,7 +223,7 @@ router.get('/:id/scores', gameController.getGameScores);
  * @swagger
  * /games/{id}/users:
  *   get:
- *     summary: Récupère les utilisateurs qui ont joué à un jeu spécifique
+ *     summary: Retrieve users who have played a specific game
  *     tags: [Games]
  *     parameters:
  *       - in: path
@@ -231,10 +231,10 @@ router.get('/:id/scores', gameController.getGameScores);
  *         required: true
  *         schema:
  *           type: integer
- *         description: ID du jeu
+ *         description: Game ID.
  *     responses:
  *       200:
- *         description: Liste des utilisateurs ayant joué à ce jeu
+ *         description: List of users who played the game.
  *         content:
  *           application/json:
  *             schema:
@@ -255,9 +255,8 @@ router.get('/:id/scores', gameController.getGameScores);
  *                     type: string
  *                     format: date-time
  *       500:
- *         description: Erreur serveur
+ *         description: Server error.
  */
 router.get('/:id/users', gameController.getGameUsers);
-
 
 module.exports = router;

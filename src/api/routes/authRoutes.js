@@ -1,31 +1,30 @@
 const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
-const { authenticate } = require('../middlewares/authMiddleware');
 
 /**
  * @swagger
  * tags:
  *   name: Auth
- *   description: Gestion de l'authentification des utilisateurs.
+ *   description: User authentication management.
  */
 
 /**
  * @swagger
  * /auth/register:
  *   post:
- *     summary: Inscription d'un nouvel utilisateur
+ *     summary: Register a new user
  *     tags: [Auth]
  *     requestBody:
  *       required: true
- *       description: Données d'inscription de l'utilisateur.
+ *       description: User registration data.
  *       content:
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/UserRegister'
  *     responses:
  *       201:
- *         description: Inscription réussie, retourne un token JWT.
+ *         description: Registration successful, returns a JWT token.
  *         content:
  *           application/json:
  *             schema:
@@ -33,14 +32,14 @@ const { authenticate } = require('../middlewares/authMiddleware');
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Inscription réussie
+ *                   example: Registration successful
  *                 token:
  *                   type: string
  *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
  *       400:
- *         description: Erreur de validation ou utilisateur déjà existant.
+ *         description: Validation error or user already exists.
  *       500:
- *         description: Erreur interne du serveur.
+ *         description: Internal server error.
  */
 router.post('/register', authController.register);
 
@@ -48,18 +47,18 @@ router.post('/register', authController.register);
  * @swagger
  * /auth/login:
  *   post:
- *     summary: Connexion d'un utilisateur existant
+ *     summary: User login
  *     tags: [Auth]
  *     requestBody:
  *       required: true
- *       description: Données de connexion de l'utilisateur.
+ *       description: User login credentials.
  *       content:
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/UserLogin'
  *     responses:
  *       200:
- *         description: Connexion réussie, retourne un token JWT.
+ *         description: Login successful, returns a JWT token.
  *         content:
  *           application/json:
  *             schema:
@@ -67,14 +66,14 @@ router.post('/register', authController.register);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Connexion réussie
+ *                   example: Login successful
  *                 token:
  *                   type: string
  *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
  *       400:
- *         description: Nom d'utilisateur ou mot de passe invalide.
+ *         description: Invalid username or password.
  *       500:
- *         description: Erreur interne du serveur.
+ *         description: Internal server error.
  */
 router.post('/login', authController.login);
 

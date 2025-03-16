@@ -7,14 +7,14 @@ const { authenticate, authorizeRole, authorizeRoles } = require('../middlewares/
  * @swagger
  * tags:
  *   name: Users
- *   description: Gestion des utilisateurs.
+ *   description: User management.
  */
 
 /**
  * @swagger
  * /users/usernames:
  *   get:
- *     summary: Récupérer la liste des usernames avec filtrage et pagination
+ *     summary: Retrieve a list of usernames with filtering and pagination
  *     tags: [Users]
  *     parameters:
  *       - in: query
@@ -22,21 +22,21 @@ const { authenticate, authorizeRole, authorizeRoles } = require('../middlewares/
  *         schema:
  *           type: integer
  *           default: 1
- *         description: Numéro de page pour la pagination.
+ *         description: Page number for pagination.
  *       - in: query
  *         name: limit
  *         schema:
  *           type: integer
  *           default: 10
- *         description: Nombre d'éléments par page.
+ *         description: Number of items per page.
  *       - in: query
  *         name: username
  *         schema:
  *           type: string
- *         description: Filtrer par partie du nom d'utilisateur.
+ *         description: Filter by part of the username.
  *     responses:
  *       200:
- *         description: Liste paginée des usernames.
+ *         description: Paginated list of usernames.
  *         content:
  *           application/json:
  *             schema:
@@ -48,7 +48,7 @@ const { authenticate, authorizeRole, authorizeRoles } = require('../middlewares/
  *                     type: string
  *                     example: player1
  *       500:
- *         description: Erreur interne du serveur.
+ *         description: Internal server error.
  */
 router.get('/usernames', userController.getUsernames);
 
@@ -56,7 +56,7 @@ router.get('/usernames', userController.getUsernames);
  * @swagger
  * /users:
  *   get:
- *     summary: Récupérer la liste des utilisateurs avec filtrage et pagination
+ *     summary: Retrieve a list of users with filtering and pagination
  *     tags: [Users]
  *     security:
  *       - bearerAuth: []
@@ -66,21 +66,21 @@ router.get('/usernames', userController.getUsernames);
  *         schema:
  *           type: integer
  *           default: 1
- *         description: Numéro de page pour la pagination.
+ *         description: Page number for pagination.
  *       - in: query
  *         name: limit
  *         schema:
  *           type: integer
  *           default: 10
- *         description: Nombre d'éléments par page.
+ *         description: Number of items per page.
  *       - in: query
  *         name: username
  *         schema:
  *           type: string
- *         description: Filtrer par partie du nom d'utilisateur.
+ *         description: Filter by part of the username.
  *     responses:
  *       200:
- *         description: Liste paginée des utilisateurs complets
+ *         description: Paginated list of users with full details.
  *         content:
  *           application/json:
  *             schema:
@@ -105,9 +105,9 @@ router.get('/usernames', userController.getUsernames);
  *                     format: date-time
  *                     example: "2024-01-01T12:00:00Z"
  *       403:
- *         description: Accès refusé (réservé aux ADMIN/ROOT)
+ *         description: Access denied (restricted to ADMIN/ROOT).
  *       500:
- *         description: Erreur interne du serveur
+ *         description: Internal server error.
  */
 router.get('/', authenticate, authorizeRoles(['ADMIN', 'ROOT']), userController.getUsers);
 
@@ -115,13 +115,13 @@ router.get('/', authenticate, authorizeRoles(['ADMIN', 'ROOT']), userController.
  * @swagger
  * /users/password:
  *   put:
- *     summary: Modifier le mot de passe de l'utilisateur connecté
+ *     summary: Change the password of the authenticated user
  *     tags: [Users]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
  *       required: true
- *       description: Nouveau mot de passe de l'utilisateur.
+ *       description: New password for the user.
  *       content:
  *         application/json:
  *           schema:
@@ -132,14 +132,14 @@ router.get('/', authenticate, authorizeRoles(['ADMIN', 'ROOT']), userController.
  *               newPassword:
  *                 type: string
  *                 minLength: 6
- *                 example: nouveauPass123
+ *                 example: newPassword123
  *     responses:
  *       200:
- *         description: Mot de passe mis à jour avec succès.
+ *         description: Password updated successfully.
  *       400:
- *         description: Erreur de validation.
+ *         description: Validation error.
  *       401:
- *         description: Non authentifié.
+ *         description: Not authenticated.
  */
 router.put('/password', authenticate, userController.updatePassword);
 
@@ -147,17 +147,17 @@ router.put('/password', authenticate, userController.updatePassword);
  * @swagger
  * /users:
  *   delete:
- *     summary: Supprimer le compte de l'utilisateur connecté
+ *     summary: Delete the account of the authenticated user
  *     tags: [Users]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Compte supprimé avec succès.
+ *         description: Account deleted successfully.
  *       401:
- *         description: Non authentifié.
+ *         description: Not authenticated.
  *       500:
- *         description: Erreur interne du serveur.
+ *         description: Internal server error.
  */
 router.delete('/', authenticate, userController.deleteAccount);
 
@@ -165,13 +165,13 @@ router.delete('/', authenticate, userController.deleteAccount);
  * @swagger
  * /users/givePrivilege:
  *   put:
- *     summary: Modifier le rôle d'un utilisateur (accès réservé au ROOT)
+ *     summary: Change the role of a user (ROOT access only)
  *     tags: [Users]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
  *       required: true
- *       description: Données pour modifier le rôle d'un utilisateur.
+ *       description: Data to change the user's role.
  *       content:
  *         application/json:
  *           schema:
@@ -189,7 +189,7 @@ router.delete('/', authenticate, userController.deleteAccount);
  *                 example: ADMIN
  *     responses:
  *       200:
- *         description: Privilège mis à jour avec succès.
+ *         description: Privilege updated successfully.
  *         content:
  *           application/json:
  *             schema:
@@ -197,7 +197,7 @@ router.delete('/', authenticate, userController.deleteAccount);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Privilège mis à jour avec succès
+ *                   example: Privilege updated successfully
  *                 user:
  *                   type: object
  *                   properties:
@@ -211,20 +211,19 @@ router.delete('/', authenticate, userController.deleteAccount);
  *                       type: string
  *                       example: ADMIN
  *       400:
- *         description: Erreur de validation ou rôle non valide.
+ *         description: Validation error or invalid role.
  *       401:
- *         description: Non authentifié.
+ *         description: Not authenticated.
  *       403:
- *         description: Accès refusé.
+ *         description: Access denied.
  */
 router.put('/givePrivilege', authenticate, authorizeRole('ROOT'), userController.givePrivilege);
-
 
 /**
  * @swagger
  * /users/{id}/scores:
  *   get:
- *     summary: Récupère les scores d'un utilisateur pour tous les jeux auxquels il a joué
+ *     summary: Retrieve scores for a user across all games they have played
  *     tags: [Users]
  *     parameters:
  *       - in: path
@@ -232,10 +231,10 @@ router.put('/givePrivilege', authenticate, authorizeRole('ROOT'), userController
  *         required: true
  *         schema:
  *           type: integer
- *         description: ID de l'utilisateur
+ *         description: User ID.
  *     responses:
  *       200:
- *         description: Liste des scores de l'utilisateur par jeu
+ *         description: List of the user's scores by game.
  *         content:
  *           application/json:
  *             schema:
@@ -256,7 +255,7 @@ router.put('/givePrivilege', authenticate, authorizeRole('ROOT'), userController
  *                     type: string
  *                     format: date-time
  *       500:
- *         description: Erreur serveur
+ *         description: Server error.
  */
 router.get('/:id/scores', userController.getUserScores);
 
@@ -264,7 +263,7 @@ router.get('/:id/scores', userController.getUserScores);
  * @swagger
  * /users/{id}/games:
  *   get:
- *     summary: Récupère les jeux auxquels un utilisateur a joué
+ *     summary: Retrieve games that a user has played
  *     tags: [Users]
  *     parameters:
  *       - in: path
@@ -272,10 +271,10 @@ router.get('/:id/scores', userController.getUserScores);
  *         required: true
  *         schema:
  *           type: integer
- *         description: ID de l'utilisateur
+ *         description: User ID.
  *     responses:
  *       200:
- *         description: Liste des jeux auxquels l'utilisateur a joué
+ *         description: List of games the user has played.
  *         content:
  *           application/json:
  *             schema:
@@ -291,14 +290,13 @@ router.get('/:id/scores', userController.getUserScores);
  *                     example: "Pac-Man"
  *                   description:
  *                     type: string
- *                     example: "Un jeu d'arcade classique"
+ *                     example: "A classic arcade game"
  *                   playedAt:
  *                     type: string
  *                     format: date-time
  *       500:
- *         description: Erreur serveur
+ *         description: Server error.
  */
 router.get('/:id/games', userController.getUserGames);
-
 
 module.exports = router;

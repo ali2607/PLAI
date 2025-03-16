@@ -1,26 +1,25 @@
-// swaggerOptions.js
+// swagger.js
 const swaggerJsDoc = require('swagger-jsdoc');
 
 const options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'API PLAI',
+      title: 'PLAI API',
       version: '1.0.0',
-      description: 'Documentation de l\'API de mini-jeux',
+      description: 'API documentation for mini-games',
     },
     servers: [
       { url: 'http://localhost:3000' },
     ],
   },
-  // Indiquez ici le chemin de vos fichiers contenant des commentaires JSDoc
   apis: ['./src/api/routes/*.js', "./swagger.js"],
 };
-
 
 const swaggerSpec = swaggerJsDoc(options);
 
 module.exports = swaggerSpec;
+
 /**
  * @swagger
  * components:
@@ -37,10 +36,10 @@ module.exports = swaggerSpec;
  *           example: player1
  *         email:
  *           type: string
- *           example: email@email.com
+ *           example: email@example.com
  *         password:
  *           type: string
- *           example: motdepasse123
+ *           example: password123
  *     UserLogin:
  *       type: object
  *       required:
@@ -52,7 +51,7 @@ module.exports = swaggerSpec;
  *           example: player1
  *         password:
  *           type: string
- *           example: motdepasse123
+ *           example: password123
  *     Game:
  *       type: object
  *       properties:
@@ -64,7 +63,7 @@ module.exports = swaggerSpec;
  *           example: Pac-Man
  *         description:
  *           type: string
- *           example: Un classique de l’arcade...
+ *           example: A classic arcade game.
  *         createdAt:
  *           type: string
  *           format: date-time
@@ -79,7 +78,7 @@ module.exports = swaggerSpec;
  *           example: Pac-Man
  *         description:
  *           type: string
- *           example: Un classique de l’arcade...
+ *           example: A classic arcade game.
  *     Score:
  *       type: object
  *       properties:
@@ -131,4 +130,4 @@ module.exports = swaggerSpec;
  *       type: http
  *       scheme: bearer
  *       bearerFormat: JWT 
-*/
+ */
