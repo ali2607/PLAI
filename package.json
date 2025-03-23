@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "test": "jest",
     "db:reset": "prisma migrate reset --force",
-    "db:setup": "prisma generate && prisma migrate deploy"
+    "db:setup": "prisma generate && prisma migrate deploy && node src/infrastructure/prisma/seed.js"
   },
   "prisma": {
     "schema": "./src/infrastructure/prisma/schema.prisma",
